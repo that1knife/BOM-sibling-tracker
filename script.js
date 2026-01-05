@@ -1,5 +1,4 @@
 
-document.addEventListener("DOMContentLoaded", () => {
   import { getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import {
@@ -36,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const provider = new GoogleAuthProvider();
   
   // 🔗 DOM elements
+document.addEventListener("DOMContentLoaded", () => {
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
   const appDiv = document.getElementById("app");
