@@ -14,7 +14,7 @@ import {
   collection
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 Your Firebase config (YES — this part is correct)
+// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCYN4w0tFj6aE-FJXYaCgm3KD7uvXbCHVc",
   authDomain: "bom-sibling-tracker-50515.firebaseapp.com",
@@ -29,3 +29,74 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
 const provider = new GoogleAuthProvider();
+
+// 🔗 DOM elements
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const appDiv = document.getElementById("app");
+const saveProfileBtn = document.getElementById("saveProfile");
+
+// 🔐 Login
+loginBtn.addEventListener("click", async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (err) {
+    console.error("Login error:", err);
+  }
+});
+
+// 🚪 Logout
+logoutBtn.addEventListener("click", () => signOut(auth));
+
+// 👀 Auth state listener
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    console.log("Logged in as:", user.displayName);
+
+    loginBtn.hidden = true;
+    logoutBtn.hidden = false;
+    appDiv.hidden = false;
+
+    loadUsers();
+  } else {
+    console.log("Logged out");
+
+    loginBtn.hidden = false;
+    logoutBtn.hidden = true;
+    appDiv.hidden = true;
+  }
+});
+
+// 💾 Save profile
+saveProfileBtn.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const language = document.getElementById("language").value;
+  const book = document.getElementById("book").value;
+  const chapter = Number(document.getElementById("chapter").value);
+
+  await setDoc(doc(db, "users", user.uid), {
+    name: user.displayName,
+    language,
+    book,
+    chapter,
+    photoURL: user.photoURL
+  });
+
+  loadUsers();
+});
+
+// 📖 Load all users
+async function loadUsers() {
+  const list = document.getElementById("userList");
+  list.innerHTML = "";
+
+  const snapshot = await getDocs(collection(db, "users"));
+  snapshot.forEach(docSnap => {
+    const u = docSnap.data();
+    const li = document.createElement("li");
+    li.textContent = `${u.name} — ${u.book} ${u.chapter} (${u.language})`;
+    list.appendChild(li);
+  });
+}
