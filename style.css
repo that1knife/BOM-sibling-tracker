@@ -1,1 +1,46 @@
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.card {
+  background-color: #f8f8f8;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 200px;
+}
+
+.card img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.card h3 {
+  margin: 8px 0 4px 0;
+  font-size: 1.1em;
+}
+
+.card p {
+  margin: 4px 0;
+}
+
+.progress-bar-container {
+  background-color: #ddd;
+  border-radius: 6px;
+  height: 12px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 6px;
+  width: 0%;
+}
 
