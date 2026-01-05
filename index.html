@@ -2,13 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Progress Tracker</title>
+  <title>Book of Mormon Progress</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Family Progress Tracker</h1>
-  <p>It works 🎉</p>
 
-  <script src="script.js"></script>
+<header>
+  <h1>📖 Family Reading Tracker</h1>
+  <button id="loginBtn">Sign in with Google</button>
+  <button id="logoutBtn" hidden>Logout</button>
+</header>
+
+<main id="app" hidden>
+  <section id="profile">
+    <h2>Your Progress</h2>
+    <input id="language" placeholder="Language (e.g. Norwegian)">
+    <input id="book" placeholder="Book (e.g. 1 Nephi)">
+    <input id="chapter" type="number" placeholder="Chapter">
+    <button id="saveProfile">Save</button>
+  </section>
+
+  <section id="dashboard">
+    <h2>Family Progress</h2>
+    <ul id="userList"></ul>
+  </section>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
+<script src="script.js"></script>
 </body>
 </html>
