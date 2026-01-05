@@ -11,9 +11,11 @@ import {
   getFirestore,
   doc,
   setDoc,
+  getDoc,
   getDocs,
   collection
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 
 // 🔥 Firebase config
 const firebaseConfig = {
@@ -60,22 +62,24 @@ onAuthStateChanged(auth, async (user) => {
     const snap = await getDoc(userRef);
 
     if (!snap.exists()) {
-      // First-time user
+      // 🆕 First-time login → create profile
       await setDoc(userRef, {
         name: user.displayName,
+        email: user.email,
         language: "",
         book: "",
         chapter: 0,
         streak: 0,
         lastRead: null,
-        photoURL: user.photoURL
+        photoURL: user.photoURL,
+        createdAt: new Date()
       });
     } else {
-      // Load existing profile
+      // 🔁 Returning user → load profile
       const data = snap.data();
-      language.value = data.language || "";
-      book.value = data.book || "";
-      chapter.value = data.chapter || "";
+      document.getElementById("language").value = data.language || "";
+      document.getElementById("book").value = data.book || "";
+      document.getElementById("chapter").value = data.chapter || "";
     }
 
     loadUsers();
@@ -87,6 +91,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 
+
 // 💾 Save profile
 saveProfileBtn.addEventListener("click", async () => {
   const user = auth.currentUser;
@@ -96,16 +101,20 @@ saveProfileBtn.addEventListener("click", async () => {
   const book = document.getElementById("book").value;
   const chapter = Number(document.getElementById("chapter").value);
 
-  await setDoc(doc(db, "users", user.uid), {
-    name: user.displayName,
-    language,
-    book,
-    chapter,
-    photoURL: user.photoURL
-  });
+  await setDoc(
+    doc(db, "users", user.uid),
+    {
+      language,
+      book,
+      chapter,
+      updatedAt: new Date()
+    },
+    { merge: true }
+  );
 
   loadUsers();
 });
+
 
 // 📖 Load all users
 async function loadUsers() {
