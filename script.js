@@ -1,3 +1,4 @@
+import { getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getAuth,
@@ -51,21 +52,40 @@ logoutBtn.addEventListener("click", () => signOut(auth));
 // 👀 Auth state listener
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    console.log("Logged in as:", user.displayName);
-
     loginBtn.hidden = true;
     logoutBtn.hidden = false;
     appDiv.hidden = false;
 
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+
+    if (!snap.exists()) {
+      // First-time user
+      await setDoc(userRef, {
+        name: user.displayName,
+        language: "",
+        book: "",
+        chapter: 0,
+        streak: 0,
+        lastRead: null,
+        photoURL: user.photoURL
+      });
+    } else {
+      // Load existing profile
+      const data = snap.data();
+      language.value = data.language || "";
+      book.value = data.book || "";
+      chapter.value = data.chapter || "";
+    }
+
     loadUsers();
   } else {
-    console.log("Logged out");
-
     loginBtn.hidden = false;
     logoutBtn.hidden = true;
     appDiv.hidden = true;
   }
 });
+
 
 // 💾 Save profile
 saveProfileBtn.addEventListener("click", async () => {
