@@ -118,14 +118,52 @@ saveProfileBtn.addEventListener("click", async () => {
 
 // 📖 Load all users
 async function loadUsers() {
-  const list = document.getElementById("userList");
-  list.innerHTML = "";
+  const container = document.getElementById("userCards");
+  container.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "users"));
   snapshot.forEach(docSnap => {
     const u = docSnap.data();
-    const li = document.createElement("li");
-    li.textContent = `${u.name} — ${u.book} ${u.chapter} (${u.language})`;
-    list.appendChild(li);
+
+    // Simple calculation: progress percentage
+    const chapterNum = Number(u.chapter) || 0;
+    const progressPercent = Math.min((chapterNum / 50) * 100, 100); // assume 50 chapters per book max
+
+    // Create card
+    const card = document.createElement("div");
+    card.className = "card";
+
+    // Profile picture (fallback to placeholder)
+    const img = document.createElement("img");
+    img.src = u.photoURL || "https://via.placeholder.com/48";
+    card.appendChild(img);
+
+    // Name
+    const name = document.createElement("h3");
+    name.textContent = u.name;
+    card.appendChild(name);
+
+    // Language
+    const lang = document.createElement("p");
+    lang.textContent = `Language: ${u.language || "-"}`;
+    card.appendChild(lang);
+
+    // Book + Chapter
+    const book = document.createElement("p");
+    book.textContent = `Reading: ${u.book || "-"} ${u.chapter || "-"}`;
+    card.appendChild(book);
+
+    // Progress bar
+    const barContainer = document.createElement("div");
+    barContainer.className = "progress-bar-container";
+    const bar = document.createElement("div");
+    bar.className = "progress-bar";
+    bar.style.width = `${progressPercent}%`;
+    barContainer.appendChild(bar);
+    card.appendChild(barContainer);
+
+    container.appendChild(card);
   });
 }
+
+
