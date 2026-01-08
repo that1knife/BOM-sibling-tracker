@@ -137,3 +137,18 @@ main {
     border-bottom: 1px solid #ddd;
   }
 }
+
+.profile-panel label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  gap: 0.25rem;
+}
+
+.profile-panel select,
+.profile-panel input {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
