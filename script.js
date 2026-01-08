@@ -38,6 +38,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const appDiv = document.getElementById("app");
   const saveProfileBtn = document.getElementById("saveProfile");
 
+
+// Set BOM books
+const BOOKS = {
+  "1 Nephi": 22,
+  "2 Nephi": 33,
+  "Jacob": 7,
+  "Enos": 1,
+  "Jarom": 1,
+  "Omni": 1,
+  "Words of Mormon": 1,
+  "Mosiah": 29,
+  "Alma": 63,
+  "Helaman": 16,
+  "3 Nephi": 30,
+  "4 Nephi": 1,
+  "Mormon": 9,
+  "Ether": 15,
+  "Moroni": 10
+};
+
+  
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
     try {
