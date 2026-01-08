@@ -159,8 +159,8 @@ bookSelect.addEventListener("change", () => {
     if (!user) return;
 
     const language = document.getElementById("language").value;
-    const book = document.getElementById("book").value;
-    const chapter = Number(document.getElementById("chapter").value) || 0;
+    const book = bookSelect.value;
+    const chapter = Number(chapterSelect.value) || 0;
 
     await setDoc(
       doc(db, "users", user.uid),
