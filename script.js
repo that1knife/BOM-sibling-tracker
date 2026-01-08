@@ -53,10 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 👀 Auth state listener
   onAuthStateChanged(auth, async (user) => {
-    document.getElementById("profilePic").src =
-  user.photoURL || "https://via.placeholder.com/96";
 
     if (user) {
+      document.getElementById("profilePic").src =
+      user.photoURL || "https://via.placeholder.com/96";
+      
       loginBtn.hidden = true;
       logoutBtn.hidden = false;
       appDiv.hidden = false;
