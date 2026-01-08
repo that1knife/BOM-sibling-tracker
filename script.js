@@ -58,6 +58,37 @@ const BOOKS = {
   "Moroni": 10
 };
 
+const bookSelect = document.getElementById("book");
+const chapterSelect = document.getElementById("chapter");
+
+// Populate book dropdown
+Object.keys(BOOKS).forEach(book => {
+  const option = document.createElement("option");
+  option.value = book;
+  option.textContent = book;
+  bookSelect.appendChild(option);
+});
+
+// When book changes → update chapters
+bookSelect.addEventListener("change", () => {
+  const selectedBook = bookSelect.value;
+  chapterSelect.innerHTML = '<option value="">Select chapter</option>';
+
+  if (!selectedBook) {
+    chapterSelect.disabled = true;
+    return;
+  }
+
+  const totalChapters = BOOKS[selectedBook];
+  chapterSelect.disabled = false;
+
+  for (let i = 1; i <= totalChapters; i++) {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = i;
+    chapterSelect.appendChild(opt);
+  }
+});
   
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
