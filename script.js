@@ -132,10 +132,17 @@ bookSelect.addEventListener("change", () => {
         });
       } else {
         // 🔁 Returning user → load profile
-        const data = snap.data();
         document.getElementById("language").value = data.language || "";
-        document.getElementById("book").value = data.book || "";
-        document.getElementById("chapter").value = data.chapter || 0;
+
+        if (data.book && BOOKS[data.book]) {
+          bookSelect.value = data.book;
+          bookSelect.dispatchEvent(new Event("change"));
+        
+          if (data.chapter) {
+            chapterSelect.value = data.chapter;
+          }
+        }
+
       }
 
       loadUsers();
