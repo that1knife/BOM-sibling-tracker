@@ -23,9 +23,36 @@
       <div class="profile-card">
         <img id="profilePic" class="avatar" src="https://via.placeholder.com/96">
 
-        <input id="language" placeholder="Language (e.g. Norwegian)">
-        <input id="book" placeholder="Book (e.g. 1 Nephi)">
-        <input id="chapter" type="number" placeholder="Chapter">
+        <label>
+  Language:
+  <input list="languages" id="language" placeholder="Type or select">
+</label>
+
+<datalist id="languages">
+  <option value="English">
+  <option value="Spanish">
+  <option value="Norwegian">
+  <option value="German">
+  <option value="French">
+  <option value="Portuguese">
+  <option value="Italian">
+  <option value="Japanese">
+  <option value="Korean">
+</datalist>
+
+<label>
+  Book:
+  <select id="book">
+    <option value="">Select a book</option>
+  </select>
+</label>
+
+<label>
+  Chapter:
+  <select id="chapter" disabled>
+    <option value="">Select chapter</option>
+  </select>
+</label>
 
         <button id="saveProfile">Save</button>
       </div>
