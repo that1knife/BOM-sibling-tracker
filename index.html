@@ -61,6 +61,18 @@
     <!-- RIGHT PANEL -->
     <section class="dashboard-panel">
       <h2>Family Progress</h2>
+      <div class="dashboard-controls">
+        <div class="view-toggle">
+          <button id="overviewBtn" class="active">Overview</button>
+          <button id="rankingsBtn">Rankings</button>
+        </div>
+      
+        <select id="rankingType" hidden>
+          <option value="progress">Progress</option>
+          <option value="streak">Streak</option>
+        </select>
+      </div>
+
       <div id="userCards" class="cards-container"></div>
     </section>
 
