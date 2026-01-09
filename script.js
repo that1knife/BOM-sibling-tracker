@@ -156,69 +156,63 @@ bookSelect.addEventListener("change", () => {
 
   // 👀 Auth state listener
   onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    // 🚪 LOGGED OUT
+    landing.style.display = "flex";
+    appDiv.hidden = true;
+    loginBtn.hidden = false;
+    logoutBtn.hidden = true;
+    return;
+  }
 
-    if (user) {
-      document.getElementById("profilePic").src =
-      user.photoURL || "https://via.placeholder.com/96";
-      
-      loginBtn.hidden = true;
-      logoutBtn.hidden = false;
-      appDiv.hidden = false;
-      landing.hidden = true;
-      appDiv.hidden = false;
-      loginBtn.hidden = true;
-      logoutBtn.hidden = false;
+  // 🔓 LOGGED IN (THIS RUNS FOR BOTH NEW + RETURNING USERS)
+  landing.style.display = "none";
+  appDiv.hidden = false;
+  loginBtn.hidden = true;
+  logoutBtn.hidden = false;
 
+  document.getElementById("profilePic").src =
+    user.photoURL || "https://via.placeholder.com/96";
 
-      const userRef = doc(db, "users", user.uid);
-      const snap = await getDoc(userRef);
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
 
-      if (!snap.exists()) {
-        // 🆕 First-time login → create profile
-        await setDoc(userRef, {
-          name: user.displayName,
-          email: user.email,
-          language: "",
-          book: "",
-          chapter: 0,
-          readingDays: [],
-          streak: 0,
-          photoURL: user.photoURL,
-          createdAt: new Date()
-        });
-      } else {
-        // 🔁 Returning user → load profile
-        const data = snap.data();
-        readingDays = data.readingDays || [];
-        currentStreak = data.streak || 0;
-        renderCalendar();
+  if (!snap.exists()) {
+    // 🆕 First-time login
+    await setDoc(userRef, {
+      name: user.displayName,
+      email: user.email,
+      language: "",
+      book: "",
+      chapter: 0,
+      readingDays: [],
+      streak: 0,
+      photoURL: user.photoURL,
+      createdAt: new Date()
+    });
+  } else {
+    // 🔁 Returning user
+    const data = snap.data();
 
-        landing.hidden = false;
-        appDiv.hidden = true;
-        loginBtn.hidden = false;
-        logoutBtn.hidden = true;
-        
-        document.getElementById("language").value = data.language || "";
-      
-        if (data.book && BOOKS[data.book]) {
-          bookSelect.value = data.book;
-          bookSelect.dispatchEvent(new Event("change"));
-      
-          if (data.chapter) {
-            chapterSelect.value = data.chapter;
-          }
-        }
+    readingDays = data.readingDays || [];
+    currentStreak = data.streak || 0;
+    renderCalendar();
+
+    document.getElementById("language").value = data.language || "";
+
+    if (data.book && BOOKS[data.book]) {
+      bookSelect.value = data.book;
+      bookSelect.dispatchEvent(new Event("change"));
+      if (data.chapter) {
+        chapterSelect.value = data.chapter;
       }
-
-
-      loadUsers();
-      document.getElementById("streakCount").textContent = currentStreak;
-    } else {
-      loginBtn.hidden = false;
-      logoutBtn.hidden = true;
-      appDiv.hidden = true;
     }
-  });
+  }
+
+  document.getElementById("streakCount").textContent = currentStreak;
+  loadUsers();
+});
+
 
   // Calendar
   function renderCalendar() {
