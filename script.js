@@ -73,6 +73,7 @@ Object.keys(BOOKS).forEach(book => {
 bookSelect.addEventListener("change", () => {
   const selectedBook = bookSelect.value;
   chapterSelect.innerHTML = '<option value="">Select chapter</option>';
+  chapterSelect.value = "";
 
   if (!selectedBook) {
     chapterSelect.disabled = true;
@@ -89,6 +90,7 @@ bookSelect.addEventListener("change", () => {
     chapterSelect.appendChild(opt);
   }
 });
+
   
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
@@ -132,18 +134,20 @@ bookSelect.addEventListener("change", () => {
         });
       } else {
         // 🔁 Returning user → load profile
+        const data = snap.data();
+      
         document.getElementById("language").value = data.language || "";
-
+      
         if (data.book && BOOKS[data.book]) {
           bookSelect.value = data.book;
           bookSelect.dispatchEvent(new Event("change"));
-        
+      
           if (data.chapter) {
             chapterSelect.value = data.chapter;
           }
         }
-
       }
+
 
       loadUsers();
     } else {
@@ -157,6 +161,10 @@ bookSelect.addEventListener("change", () => {
   saveProfileBtn.addEventListener("click", async () => {
     const user = auth.currentUser;
     if (!user) return;
+    if (!book) {
+  alert("Please select a book and chapter first.");
+  return;
+}
 
     const language = document.getElementById("language").value;
     const book = bookSelect.value;
