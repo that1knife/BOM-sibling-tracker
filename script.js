@@ -190,15 +190,16 @@ bookSelect.addEventListener("change", () => {
   saveProfileBtn.addEventListener("click", async () => {
     const user = auth.currentUser;
     if (!user) return;
-    if (!book) {
-  alert("Please select a book and chapter first.");
-  return;
-}
-
+  
     const language = document.getElementById("language").value;
     const book = bookSelect.value;
     const chapter = Number(chapterSelect.value) || 0;
-
+  
+    if (!book || !chapter) {
+      alert("Please select a book and chapter first.");
+      return;
+    }
+  
     await setDoc(
       doc(db, "users", user.uid),
       {
@@ -209,9 +210,10 @@ bookSelect.addEventListener("change", () => {
       },
       { merge: true }
     );
-
+  
     loadUsers();
   });
+
 
   // 📖 Load all users
   async function loadUsers() {
