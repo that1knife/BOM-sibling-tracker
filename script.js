@@ -37,6 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
   const appDiv = document.getElementById("app");
   const saveProfileBtn = document.getElementById("saveProfile");
+  let viewMode = "overview"; // or "rankings"
+  let rankingMode = "progress";
+
 
 
 // Set BOM books
