@@ -253,4 +253,15 @@ main {
   cursor: not-allowed;
 }
 
+.streak-display {
+  background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+  color: white;
+  padding: 0.75rem;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  margin: 0.75rem 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
 
