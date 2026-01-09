@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let readingDays = [];
   let currentStreak = 0;
   
-  const START_DATE = new Date("2026-01-01");
+  const START_DATE = new Date(2026, 0, 1)
   let currentMonth = new Date();
   currentMonth.setDate(1);
 
@@ -189,6 +189,7 @@ bookSelect.addEventListener("change", () => {
 
 
       loadUsers();
+      document.getElementById("streakCount").textContent = currentStreak;
     } else {
       loginBtn.hidden = false;
       logoutBtn.hidden = true;
@@ -269,6 +270,7 @@ bookSelect.addEventListener("change", () => {
     }
   
     currentStreak = streak;
+    document.getElementById("streakCount").textContent = currentStreak;
   }
 
   async function saveCalendar() {
@@ -351,13 +353,13 @@ bookSelect.addEventListener("change", () => {
     } else if (rankingMode === "streak") {
       users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
     }
-  document.getElementById("streakCount").textContent = currentStreak;
   
     // Header
     const header = document.createElement("div");
     header.className = "leaderboard-row leaderboard-header";
     header.innerHTML = `
       <div>#</div>
+      <div></div>
       <div>Name</div>
       <div>${rankingMode === "progress" ? "Chapter" : "Streak"}</div>
     `;
