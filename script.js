@@ -196,6 +196,117 @@ bookSelect.addEventListener("change", () => {
     }
   });
 
+  // Calendar
+  function renderCalendar() {
+    const grid = document.getElementById("calendarGrid");
+    const label = document.getElementById("calendarMonth");
+  
+    grid.innerHTML = "";
+    label.textContent = currentMonth.toLocaleString("default", {
+      month: "long",
+      year: "numeric"
+    });
+  
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const today = new Date();
+  
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+  
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dateStr = date.toISOString().split("T")[0];
+  
+      const div = document.createElement("div");
+      div.className = "calendar-day";
+      div.textContent = day;
+  
+      const isTooEarly = date < START_DATE;
+      const isFuture = date > today;
+  
+      if (isTooEarly || isFuture) {
+        div.classList.add("disabled");
+      } else {
+        if (readingDays.includes(dateStr)) {
+          div.classList.add("marked");
+        }
+  
+        div.addEventListener("click", () => {
+          toggleReadingDay(dateStr);
+        });
+      }
+  
+      grid.appendChild(div);
+    }
+  }
+
+  function toggleReadingDay(dateStr) {
+    if (readingDays.includes(dateStr)) {
+      readingDays = readingDays.filter(d => d !== dateStr);
+    } else {
+      readingDays.push(dateStr);
+    }
+  
+    readingDays.sort();
+    updateStreak();
+    saveCalendar();
+    renderCalendar();
+  }
+
+  //Streak updating
+  function updateStreak() {
+    let streak = 0;
+    let day = new Date();
+  
+    while (true) {
+      const dateStr = day.toISOString().split("T")[0];
+      if (readingDays.includes(dateStr)) {
+        streak++;
+        day.setDate(day.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+  
+    currentStreak = streak;
+  }
+
+  async function saveCalendar() {
+    const user = auth.currentUser;
+    if (!user) return;
+  
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        readingDays,
+        streak: currentStreak
+      },
+      { merge: true }
+    );
+  
+    loadUsers();
+  }
+
+
+  document.getElementById("prevMonth").onclick = () => {
+    const prev = new Date(currentMonth);
+    prev.setMonth(prev.getMonth() - 1);
+    if (prev >= START_DATE) {
+      currentMonth = prev;
+      renderCalendar();
+    }
+  };
+  
+  document.getElementById("nextMonth").onclick = () => {
+    const next = new Date(currentMonth);
+    next.setMonth(next.getMonth() + 1);
+    if (next <= new Date()) {
+      currentMonth = next;
+      renderCalendar();
+    }
+  };
+
+
   // 💾 Save profile
   saveProfileBtn.addEventListener("click", async () => {
     const user = auth.currentUser;
