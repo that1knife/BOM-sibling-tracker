@@ -1,0 +1,1 @@
+Not much to say yet...This is a little project I started working on to track me and my siblings progress with reading the Book of Mormon in different languages. Most of it is done by ChatGPT with tweaks by me and lotssss of prompts.
