@@ -45,16 +45,18 @@ main {
 
 /* LEFT PANEL */
 .profile-panel {
-  width: 320px;
+  width: 360px;
   background: white;
   border-right: 1px solid #ddd;
-  padding: 1.25rem;
+  padding: 1.5rem;
+}
+
+.profile-panel h2 {
+  margin-bottom: 1rem;
 }
 
 .profile-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .avatar {
@@ -201,6 +203,54 @@ main {
 .leaderboard-header {
   font-weight: bold;
   background: #f0f0f0;
+}
+
+/* CALENDAR */
+
+.calendar-section {
+  margin-top: 1.5rem;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.calendar-header button {
+  background: #e0e0e0;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+}
+
+.calendar-day {
+  height: 36px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  text-align: center;
+  line-height: 36px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.calendar-day.marked {
+  background: #4f7cff;
+  color: white;
+}
+
+.calendar-day.disabled {
+  background: #ddd;
+  color: #999;
+  cursor: not-allowed;
 }
 
 
