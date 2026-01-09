@@ -215,52 +215,79 @@ bookSelect.addEventListener("change", () => {
 
   // 📖 Load all users
   async function loadUsers() {
-    const container = document.getElementById("userCards");
-    container.innerHTML = "";
+  const container = document.getElementById("userCards");
+  container.innerHTML = "";
 
-    const snapshot = await getDocs(collection(db, "users"));
-    snapshot.forEach(docSnap => {
-      const u = docSnap.data();
+  const snapshot = await getDocs(collection(db, "users"));
+  let users = snapshot.docs.map(d => d.data());
 
-      // Safe defaults
-      const chapterNum = Number(u.chapter) || 0;
-      const bookName = u.book || "-";
-      const progressPercent = Math.min((chapterNum / 50) * 100, 100);
+  // SORT for rankings
+  if (viewMode === "rankings") {
+    if (rankingMode === "progress") {
+      users.sort((a, b) => (b.chapter || 0) - (a.chapter || 0));
+    } else if (rankingMode === "streak") {
+      users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
+    }
 
-      // Create card
-      const card = document.createElement("div");
-      card.className = "card";
+    // Header
+    const header = document.createElement("div");
+    header.className = "leaderboard-row leaderboard-header";
+    header.innerHTML = `
+      <div>#</div>
+      <div>Name</div>
+      <div>${rankingMode === "progress" ? "Chapter" : "Streak"}</div>
+    `;
+    container.appendChild(header);
 
-      // Profile picture
-      const img = document.createElement("img");
-      img.src = u.photoURL || "https://via.placeholder.com/48";
-      card.appendChild(img);
-
-      // Name
-      const nameElem = document.createElement("h3");
-      nameElem.textContent = u.name || "Unknown";
-      card.appendChild(nameElem);
-
-      // Language
-      const lang = document.createElement("p");
-      lang.textContent = `Language: ${u.language || "-"}`;
-      card.appendChild(lang);
-
-      // Book + Chapter
-      const bookElem = document.createElement("p");
-      bookElem.textContent = `Reading: ${bookName} ${chapterNum}`;
-      card.appendChild(bookElem);
-
-      // Progress bar
-      const barContainer = document.createElement("div");
-      barContainer.className = "progress-bar-container";
-      const bar = document.createElement("div");
-      bar.className = "progress-bar";
-      bar.style.width = `${progressPercent}%`;
-      barContainer.appendChild(bar);
-      card.appendChild(barContainer);
-
-      container.appendChild(card);
+    users.forEach((u, i) => {
+      const row = document.createElement("div");
+      row.className = "leaderboard-row";
+      row.innerHTML = `
+        <div>${i + 1}</div>
+        <div>${u.name || "Unknown"}</div>
+        <div>${rankingMode === "progress" ? u.chapter || 0 : u.streak || 0}</div>
+      `;
+      container.appendChild(row);
     });
+
+    return;
   }
+
+  // OVERVIEW CARDS
+  users.forEach(u => {
+    const chapterNum = Number(u.chapter) || 0;
+    const bookName = u.book || "-";
+    const progressPercent = Math.min((chapterNum / 50) * 100, 100);
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const img = document.createElement("img");
+    img.src = u.photoURL || "https://via.placeholder.com/48";
+    card.appendChild(img);
+
+    const nameElem = document.createElement("h3");
+    nameElem.textContent = u.name || "Unknown";
+    card.appendChild(nameElem);
+
+    const lang = document.createElement("p");
+    lang.textContent = `Language: ${u.language || "-"}`;
+    card.appendChild(lang);
+
+    const bookElem = document.createElement("p");
+    bookElem.textContent = `Reading: ${bookName} ${chapterNum}`;
+    card.appendChild(bookElem);
+
+    const barContainer = document.createElement("div");
+    barContainer.className = "progress-bar-container";
+    const bar = document.createElement("div");
+    bar.className = "progress-bar";
+    bar.style.width = `${progressPercent}%`;
+    barContainer.appendChild(bar);
+    card.appendChild(barContainer);
+
+    container.appendChild(card);
+  });
+}
+
 });
