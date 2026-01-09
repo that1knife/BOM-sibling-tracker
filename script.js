@@ -53,23 +53,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Set BOM books
-const BOOKS = {
-  "1 Nephi": 22,
-  "2 Nephi": 33,
-  "Jacob": 7,
-  "Enos": 1,
-  "Jarom": 1,
-  "Omni": 1,
-  "Words of Mormon": 1,
-  "Mosiah": 29,
-  "Alma": 63,
-  "Helaman": 16,
-  "3 Nephi": 30,
-  "4 Nephi": 1,
-  "Mormon": 9,
-  "Ether": 15,
-  "Moroni": 10
-};
+const BOOKS_ORDERED = [
+  { name: "1 Nephi", chapters: 22 },
+  { name: "2 Nephi", chapters: 33 },
+  { name: "Jacob", chapters: 7 },
+  { name: "Enos", chapters: 1 },
+  { name: "Jarom", chapters: 1 },
+  { name: "Omni", chapters: 1 },
+  { name: "Words of Mormon", chapters: 1 },
+  { name: "Mosiah", chapters: 29 },
+  { name: "Alma", chapters: 63 },
+  { name: "Helaman", chapters: 16 },
+  { name: "3 Nephi", chapters: 30 },
+  { name: "4 Nephi", chapters: 1 },
+  { name: "Mormon", chapters: 9 },
+  { name: "Ether", chapters: 15 },
+  { name: "Moroni", chapters: 10 }
+];
+
+const TOTAL_CHAPTERS = 239;
+
 
 const bookSelect = document.getElementById("book");
 const chapterSelect = document.getElementById("chapter");
@@ -112,6 +115,21 @@ bookSelect.addEventListener("change", () => {
       console.error(err);
     }
   });
+
+  // Calculate reading progress
+  function calculateProgress(book, chapter) {
+    let completed = 0;
+  
+    for (const b of BOOKS_ORDERED) {
+      if (b.name === book) {
+        completed += chapter;
+        break;
+      }
+      completed += b.chapters;
+    }
+  
+    return completed; // 0 → 239
+  }
 
   
   // View buttons
@@ -366,7 +384,10 @@ bookSelect.addEventListener("change", () => {
   // SORT for rankings
   if (viewMode === "rankings") {
     if (rankingMode === "progress") {
-      users.sort((a, b) => (b.chapter || 0) - (a.chapter || 0));
+      users.sort((a, b) => {
+        const aProg = calculateProgress(a.book, a.chapter || 0);
+        const bProg = calculateProgress(b.book, b.chapter || 0);
+        return bProg - aProg;
     } else if (rankingMode === "streak") {
       users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
     }
@@ -417,7 +438,9 @@ bookSelect.addEventListener("change", () => {
   users.forEach(u => {
     const chapterNum = Number(u.chapter) || 0;
     const bookName = u.book || "-";
-    const progressPercent = Math.min((chapterNum / 50) * 100, 100);
+    const progressChapters = calculateProgress(u.book, chapterNum);
+    const progressPercent = (progressChapters / TOTAL_CHAPTERS) * 100;
+
 
     const card = document.createElement("div");
     card.className = "card";
