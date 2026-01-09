@@ -39,6 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveProfileBtn = document.getElementById("saveProfile");
   let viewMode = "overview"; // or "rankings"
   let rankingMode = "progress";
+  let readingDays = [];
+  let currentStreak = 0;
+  
+  const START_DATE = new Date("2026-01-01");
+  let currentMonth = new Date();
+  currentMonth.setDate(1);
+
 
 
 
@@ -156,15 +163,18 @@ bookSelect.addEventListener("change", () => {
           language: "",
           book: "",
           chapter: 0,
+          readingDays: [],
           streak: 0,
-          lastRead: null,
           photoURL: user.photoURL,
           createdAt: new Date()
         });
       } else {
         // 🔁 Returning user → load profile
         const data = snap.data();
-      
+        readingDays = data.readingDays || [];
+        currentStreak = data.streak || 0;
+        renderCalendar();
+
         document.getElementById("language").value = data.language || "";
       
         if (data.book && BOOKS[data.book]) {
