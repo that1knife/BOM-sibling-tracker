@@ -37,6 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
   const appDiv = document.getElementById("app");
   const saveProfileBtn = document.getElementById("saveProfile");
+  const landing = document.getElementById("landing");
+  const loginBtnLanding = document.getElementById("loginBtnLanding");
+
   let viewMode = "overview"; // or "rankings"
   let rankingMode = "progress";
   let readingDays = [];
@@ -101,6 +104,16 @@ bookSelect.addEventListener("change", () => {
   }
 });
 
+  loginBtnLanding.addEventListener("click", async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      alert("Sign-in failed");
+      console.error(err);
+    }
+  });
+
+  
   // View buttons
   const overviewBtn = document.getElementById("overviewBtn");
   const rankingsBtn = document.getElementById("rankingsBtn");
@@ -151,6 +164,11 @@ bookSelect.addEventListener("change", () => {
       loginBtn.hidden = true;
       logoutBtn.hidden = false;
       appDiv.hidden = false;
+      landing.hidden = true;
+      appDiv.hidden = false;
+      loginBtn.hidden = true;
+      logoutBtn.hidden = false;
+
 
       const userRef = doc(db, "users", user.uid);
       const snap = await getDoc(userRef);
@@ -175,6 +193,11 @@ bookSelect.addEventListener("change", () => {
         currentStreak = data.streak || 0;
         renderCalendar();
 
+        landing.hidden = false;
+        appDiv.hidden = true;
+        loginBtn.hidden = false;
+        logoutBtn.hidden = true;
+        
         document.getElementById("language").value = data.language || "";
       
         if (data.book && BOOKS[data.book]) {
