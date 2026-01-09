@@ -366,13 +366,30 @@ bookSelect.addEventListener("change", () => {
     users.forEach((u, i) => {
       const row = document.createElement("div");
       row.className = "leaderboard-row";
+    
+      const medal =
+        i === 0 ? "🥇" :
+        i === 1 ? "🥈" :
+        i === 2 ? "🥉" :
+        `#${i + 1}`;
+    
       row.innerHTML = `
-        <div>${i + 1}</div>
-        <div>${u.name || "Unknown"}</div>
-        <div>${rankingMode === "progress" ? u.chapter || 0 : u.streak || 0}</div>
+        <div class="rank">${medal}</div>
+        <img class="leaderboard-avatar" src="${u.photoURL || "https://via.placeholder.com/40"}">
+        <div class="leaderboard-info">
+          <strong>${u.name || "Unknown"}</strong>
+          <small>${u.book || "-"} ${u.chapter || 0}</small>
+        </div>
+        <div class="leaderboard-stat">
+          ${rankingMode === "progress"
+            ? `📖 ${u.chapter || 0}`
+            : `🔥 ${u.streak || 0}`}
+        </div>
       `;
+    
       container.appendChild(row);
     });
+
 
     return;
   }
@@ -401,6 +418,11 @@ bookSelect.addEventListener("change", () => {
     const bookElem = document.createElement("p");
     bookElem.textContent = `Reading: ${bookName} ${chapterNum}`;
     card.appendChild(bookElem);
+
+    const streakElem = document.createElement("p");
+    streakElem.textContent = `🔥 Streak: ${u.streak || 0} days`;
+    card.appendChild(streakElem);
+
 
     const barContainer = document.createElement("div");
     barContainer.className = "progress-bar-container";
