@@ -94,6 +94,32 @@ bookSelect.addEventListener("change", () => {
   }
 });
 
+  // View buttons
+  const overviewBtn = document.getElementById("overviewBtn");
+  const rankingsBtn = document.getElementById("rankingsBtn");
+  const rankingTypeSelect = document.getElementById("rankingType");
+  
+  overviewBtn.addEventListener("click", () => {
+    viewMode = "overview";
+    overviewBtn.classList.add("active");
+    rankingsBtn.classList.remove("active");
+    rankingTypeSelect.hidden = true;
+    loadUsers();
+  });
+  
+  rankingsBtn.addEventListener("click", () => {
+    viewMode = "rankings";
+    rankingsBtn.classList.add("active");
+    overviewBtn.classList.remove("active");
+    rankingTypeSelect.hidden = false;
+    loadUsers();
+  });
+  
+  rankingTypeSelect.addEventListener("change", () => {
+    rankingMode = rankingTypeSelect.value;
+    loadUsers();
+  });
+
   
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
