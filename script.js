@@ -351,7 +351,8 @@ bookSelect.addEventListener("change", () => {
     } else if (rankingMode === "streak") {
       users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
     }
-
+  document.getElementById("streakCount").textContent = currentStreak;
+  
     // Header
     const header = document.createElement("div");
     header.className = "leaderboard-row leaderboard-header";
