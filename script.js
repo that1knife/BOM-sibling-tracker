@@ -161,6 +161,12 @@ bookSelect.addEventListener("change", () => {
     loadUsers();
   });
 
+  // Ensure default view is rendered correctly on load
+    viewMode = "overview";
+    rankingTypeSelect.hidden = true;
+    overviewBtn.classList.add("active");
+    rankingsBtn.classList.remove("active");
+
   
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
@@ -378,77 +384,78 @@ bookSelect.addEventListener("change", () => {
 
   // 📖 Load all users
   async function loadUsers() {
-  const container = document.getElementById("userCards");
-  container.innerHTML = "";
+    const container = document.getElementById("userCards");
+    container.innerHTML = "";
+    container.className = ""; // 🔑 reset layout mode
 
-  const snapshot = await getDocs(collection(db, "users"));
-  let users = snapshot.docs.map(d => d.data());
-
-  // SORT for rankings
-  if (viewMode === "rankings") {
-    if (rankingMode === "progress") {
-      users.sort((a, b) => {
-        const aProg = calculateProgress(a.book, a.chapter || 0);
-        const bProg = calculateProgress(b.book, b.chapter || 0);
-        return bProg - aProg;
-      });
-    } else if (rankingMode === "streak") {
-      users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
-    }
+    const snapshot = await getDocs(collection(db, "users"));
+    let users = snapshot.docs.map(d => d.data());
   
-    // Header
-    const header = document.createElement("div");
-    header.className = "leaderboard-row leaderboard-header";
-    header.innerHTML = `
-      <div></div>
-      <div>#</div>
-      <div></div>
-      <div>Name</div>
-      <div>${rankingMode === "progress" ? "Progress" : "Streak"}</div>
-    `;
-    container.appendChild(header);
-
-    container.className = "leaderboard-cards";
-
-    users.forEach((u, i) => {
-      const progress = calculateProgress(u.book, u.chapter || 0);
-      const percent = Math.round((progress / TOTAL_CHAPTERS) * 100);
+    // SORT for rankings
+    if (viewMode === "rankings") {
+      if (rankingMode === "progress") {
+        users.sort((a, b) => {
+          const aProg = calculateProgress(a.book, a.chapter || 0);
+          const bProg = calculateProgress(b.book, b.chapter || 0);
+          return bProg - aProg;
+        });
+      } else if (rankingMode === "streak") {
+        users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
+      }
     
-      const card = document.createElement("div");
-      card.className = "leaderboard-card";
-    
-      let medal = `#${i + 1}`;
-      if (i === 0) medal = "🥇";
-      else if (i === 1) medal = "🥈";
-      else if (i === 2) medal = "🥉";
-    
-      card.innerHTML = `
-        <div class="lb-rank">${medal}</div>
-      
-        <div class="lb-avatar">
-          <img src="${u.photoURL || "https://via.placeholder.com/52"}">
-        </div>
-      
-        <div class="lb-info">
-          <div class="lb-name">${u.name || "Unknown"}</div>
-          <div class="lb-book">${u.book || "-"} ${u.chapter || 0}</div>
-        </div>
-      
-        <div class="lb-streak">
-          🔥 <span>${u.streak || 0}</span>
-        </div>
-      
-        <div class="lb-progress">
-          <span>${progress} / ${TOTAL_CHAPTERS} chapters</span>
-          <div class="progress-bar-container">
-            <div class="progress-bar" style="width:${percent}%"></div>
-          </div>
-        </div>
+      // Header
+      const header = document.createElement("div");
+      header.className = "leaderboard-row leaderboard-header";
+      header.innerHTML = `
+        <div></div>
+        <div>#</div>
+        <div></div>
+        <div>Name</div>
+        <div>${rankingMode === "progress" ? "Progress" : "Streak"}</div>
       `;
-
-    
-      container.appendChild(card);
-    });
+      container.appendChild(header);
+  
+      container.className = "leaderboard-cards";
+  
+      users.forEach((u, i) => {
+        const progress = calculateProgress(u.book, u.chapter || 0);
+        const percent = Math.round((progress / TOTAL_CHAPTERS) * 100);
+      
+        const card = document.createElement("div");
+        card.className = "leaderboard-card";
+      
+        let medal = `#${i + 1}`;
+        if (i === 0) medal = "🥇";
+        else if (i === 1) medal = "🥈";
+        else if (i === 2) medal = "🥉";
+      
+        card.innerHTML = `
+          <div class="lb-rank">${medal}</div>
+        
+          <div class="lb-avatar">
+            <img src="${u.photoURL || "https://via.placeholder.com/52"}">
+          </div>
+        
+          <div class="lb-info">
+            <div class="lb-name">${u.name || "Unknown"}</div>
+            <div class="lb-book">${u.book || "-"} ${u.chapter || 0}</div>
+          </div>
+        
+          <div class="lb-streak">
+            🔥 <span>${u.streak || 0}</span>
+          </div>
+        
+          <div class="lb-progress">
+            <span>${progress} / ${TOTAL_CHAPTERS} chapters</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar" style="width:${percent}%"></div>
+            </div>
+          </div>
+        `;
+  
+      
+        container.appendChild(card);
+      });
 
     return;
   }
