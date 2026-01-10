@@ -78,12 +78,13 @@ const bookSelect = document.getElementById("book");
 const chapterSelect = document.getElementById("chapter");
 
 // Populate book dropdown
-Object.keys(BOOKS).forEach(book => {
+BOOKS_ORDERED.forEach(b => {
   const option = document.createElement("option");
-  option.value = book;
-  option.textContent = book;
+  option.value = b.name;
+  option.textContent = b.name;
   bookSelect.appendChild(option);
 });
+
 
 // When book changes → update chapters
 bookSelect.addEventListener("change", () => {
@@ -96,7 +97,9 @@ bookSelect.addEventListener("change", () => {
     return;
   }
 
-  const totalChapters = BOOKS[selectedBook];
+  const bookData = BOOKS_ORDERED.find(b => b.name === selectedBook);
+  const totalChapters = bookData ? bookData.chapters : 0;
+
   chapterSelect.disabled = false;
 
   for (let i = 1; i <= totalChapters; i++) {
@@ -388,6 +391,7 @@ bookSelect.addEventListener("change", () => {
         const aProg = calculateProgress(a.book, a.chapter || 0);
         const bProg = calculateProgress(b.book, b.chapter || 0);
         return bProg - aProg;
+      });
     } else if (rankingMode === "streak") {
       users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
     }
