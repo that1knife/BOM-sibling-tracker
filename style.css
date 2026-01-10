@@ -143,12 +143,45 @@ main {
   height: 100%;
 }
 
+
+.view {
+  display: none;
+  padding: 16px;
+}
+
+.view.active {
+  display: block;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.08);
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  opacity: 0.5;
+}
+
+.bottom-nav button.active {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
 /* LEFT PANEL */
 .profile-panel {
-  width: 360px;
-  background: white;
-  border-right: 1px solid #ddd;
-  padding: 1.5rem;
+  max-width: 420px;
+  margin: auto;
 }
 
 .profile-panel h2 {
@@ -221,8 +254,13 @@ main {
 
 .overview-cards {
   display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.overview-card {
+  min-width: 200px;
 }
 
 .card img {
