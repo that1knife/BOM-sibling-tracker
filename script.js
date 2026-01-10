@@ -175,6 +175,11 @@ bookSelect.addEventListener("change", () => {
 
   // 👀 Auth state listener
   onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    switchView("profile");
+  } else {
+    switchView("landing"); // or hide app entirely
+  }
   if (!user) {
     // 🚪 LOGGED OUT
     landing.style.display = "flex";
