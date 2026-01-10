@@ -324,13 +324,24 @@ main {
 
 .leaderboard-card {
   display: grid;
-  grid-template-columns: 64px 1fr 220px 120px;
+  grid-template-columns: 50px 70px 1.5fr 90px 2fr;
   align-items: center;
+  gap: 16px;
+
   background: white;
   border-radius: 14px;
-  padding: 0.75rem 1rem;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  padding: 16px 20px;
+  margin-bottom: 14px;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.leaderboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.1);
+}
+
 
 .leaderboard-rank {
   font-size: 1.3rem;
