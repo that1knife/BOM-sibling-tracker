@@ -416,7 +416,8 @@ bookSelect.addEventListener("change", () => {
       container.appendChild(header);
   
       container.className = "leaderboard-cards";
-  
+      container.className = "overview-cards";
+      
       users.forEach((u, i) => {
         const progress = calculateProgress(u.book, u.chapter || 0);
         const percent = Math.round((progress / TOTAL_CHAPTERS) * 100);
@@ -469,38 +470,27 @@ bookSelect.addEventListener("change", () => {
 
 
     const card = document.createElement("div");
-    card.className = "card";
-
-    const img = document.createElement("img");
-    img.src = u.photoURL || "https://via.placeholder.com/48";
-    card.appendChild(img);
-
-    const nameElem = document.createElement("h3");
-    nameElem.textContent = u.name || "Unknown";
-    card.appendChild(nameElem);
-
-    const lang = document.createElement("p");
-    lang.textContent = `Language: ${u.language || "-"}`;
-    card.appendChild(lang);
-
-    const bookElem = document.createElement("p");
-    bookElem.textContent = `Reading: ${bookName} ${chapterNum}`;
-    card.appendChild(bookElem);
-
-    const streakElem = document.createElement("p");
-    streakElem.textContent = `🔥 Streak: ${u.streak || 0} days`;
-    card.appendChild(streakElem);
-
-
-    const barContainer = document.createElement("div");
-    barContainer.className = "progress-bar-container";
-    const bar = document.createElement("div");
-    bar.className = "progress-bar";
-    bar.style.width = `${progressPercent}%`;
-    barContainer.appendChild(bar);
-    card.appendChild(barContainer);
-
-    container.appendChild(card);
+      card.className = "overview-card";
+      
+      card.innerHTML = `
+        <img src="${u.photoURL || "https://via.placeholder.com/64"}" />
+      
+        <div class="overview-name">${u.name || "Unknown"}</div>
+      
+        <div class="overview-book">
+          ${bookName} ${chapterNum}
+        </div>
+      
+        <div class="overview-streak">
+          🔥 ${u.streak || 0} day streak
+        </div>
+      
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width:${progressPercent}%"></div>
+        </div>
+      `;
+      
+      container.appendChild(card);
   });
 }
 
