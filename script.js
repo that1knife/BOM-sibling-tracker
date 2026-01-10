@@ -421,20 +421,30 @@ bookSelect.addEventListener("change", () => {
       else if (i === 1) medal = "🥈";
       else if (i === 2) medal = "🥉";
     
-      card.innerHTML =
-        '<div class="leaderboard-rank">' + medal + '</div>' +
-        '<img src="' + (u.photoURL || "https://via.placeholder.com/52") + '">' +
-        '<div class="leaderboard-main">' +
-          '<strong>' + (u.name || "Unknown") + '</strong>' +
-          '<small>' + (u.book || "-") + ' ' + (u.chapter || 0) + '</small>' +
-        '</div>' +
-        '<div class="leaderboard-progress">' +
-          '<span>' + progress + ' / ' + TOTAL_CHAPTERS + ' chapters</span>' +
-          '<div class="progress-bar-container">' +
-            '<div class="progress-bar" style="width:' + percent + '%"></div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="leaderboard-stat">🔥 ' + (u.streak || 0) + '</div>';
+      card.innerHTML = `
+        <div class="lb-rank">${medal}</div>
+      
+        <div class="lb-avatar">
+          <img src="${u.photoURL || "https://via.placeholder.com/52"}">
+        </div>
+      
+        <div class="lb-info">
+          <div class="lb-name">${u.name || "Unknown"}</div>
+          <div class="lb-book">${u.book || "-"} ${u.chapter || 0}</div>
+        </div>
+      
+        <div class="lb-streak">
+          🔥 <span>${u.streak || 0}</span>
+        </div>
+      
+        <div class="lb-progress">
+          <span>${progress} / ${TOTAL_CHAPTERS} chapters</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width:${percent}%"></div>
+          </div>
+        </div>
+      `;
+
     
       container.appendChild(card);
     });
