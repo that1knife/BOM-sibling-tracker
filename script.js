@@ -140,30 +140,25 @@ bookSelect.addEventListener("change", () => {
   const rankingsBtn = document.getElementById("rankingsBtn");
   const rankingTypeSelect = document.getElementById("rankingType");
   
-  function setView(mode) {
-    viewMode = mode;
+  const views = document.querySelectorAll(".view");
+  const navButtons = document.querySelectorAll(".bottom-nav button");
   
-    overviewBtn.classList.toggle("active", mode === "overview");
-    rankingsBtn.classList.toggle("active", mode === "rankings");
+  function switchView(name) {
+    views.forEach(v => v.classList.remove("active"));
+    navButtons.forEach(b => b.classList.remove("active"));
   
-    rankingTypeSelect.hidden = mode !== "rankings";
+    document.getElementById(`view-${name}`).classList.add("active");
+    document.querySelector(`.bottom-nav button[data-view="${name}"]`)
+      .classList.add("active");
   
-    loadUsers();
+    if (name === "community") loadUsers();
   }
   
-  overviewBtn.addEventListener("click", () => {
-    setView("overview");
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      switchView(btn.dataset.view);
+    });
   });
-  
-  rankingsBtn.addEventListener("click", () => {
-    setView("rankings");
-  });
-  
-  rankingTypeSelect.addEventListener("change", () => {
-    rankingMode = rankingTypeSelect.value;
-    loadUsers();
-  });
-
   
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
@@ -234,7 +229,7 @@ bookSelect.addEventListener("change", () => {
   }
 
   document.getElementById("streakCount").textContent = currentStreak;
-  setView("overview");
+  switchView("profile");
 });
 
 
