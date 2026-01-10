@@ -290,24 +290,35 @@ main {
 }
 
 .rank {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
 }
 
-.leaderboard-avatar {
-  width: 40px;
-  height: 40px;
+.lb-avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.lb-avatar img {
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
 }
 
-.leaderboard-info {
+.lb-info {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  justify-content: center;
 }
 
-.leaderboard-info small {
+.lb-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.lb-book {
+  font-size: 13px;
   color: #666;
 }
 
@@ -338,16 +349,16 @@ main {
 }
 
 .leaderboard-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: 0 10px 26px rgba(0,0,0,0.1);
 }
 
 
-.leaderboard-rank {
-  font-size: 1.3rem;
-  font-weight: 700;
+.lb-rank {
+  font-size: 24px;
   text-align: center;
 }
+
 
 .leaderboard-card img {
   width: 52px;
@@ -368,20 +379,25 @@ main {
   color: #666;
 }
 
-.leaderboard-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.leaderboard-progress span {
-  font-size: 0.8rem;
+.lb-progress span {
+  font-size: 12px;
   color: #555;
 }
 
-.leaderboard-stat {
-  font-weight: bold;
-  text-align: right;
+.lb-progress .progress-bar-container {
+  height: 10px;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+
+
+.lb-streak {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  gap: 6px;
+  color: #ff6b00;
 }
 
 
