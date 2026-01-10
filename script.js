@@ -404,7 +404,7 @@ bookSelect.addEventListener("change", () => {
     container.appendChild(header);
 
     container.className = "leaderboard-cards";
-    
+
     users.forEach((u, i) => {
       const progress = calculateProgress(u.book, u.chapter || 0);
       const percent = Math.round((progress / TOTAL_CHAPTERS) * 100);
@@ -412,31 +412,29 @@ bookSelect.addEventListener("change", () => {
       const card = document.createElement("div");
       card.className = "leaderboard-card";
     
-      const medal =
-        i === 0 ? "🥇" :
-        i === 1 ? "🥈" :
-        i === 2 ? "🥉" :
-        `#${i + 1}`;
+      let medal = `#${i + 1}`;
+      if (i === 0) medal = "🥇";
+      else if (i === 1) medal = "🥈";
+      else if (i === 2) medal = "🥉";
     
-      card.innerHTML = `
-        <div class="leaderboard-rank">${medal}</div>
-        <img src="${u.photoURL || "https://via.placeholder.com/52"}">
-        <div class="leaderboard-main">
-          <strong>${u.name || "Unknown"}</strong>
-          <small>${u.book || "-"} ${u.chapter || 0}</small>
-        </div>
-        <div class="leaderboard-progress">
-          <span>${progress} / ${TOTAL_CHAPTERS} chapters</span>
-          <div class="progress-bar-container">
-            <div class="progress-bar" style="width:${percent}%"></div>
-          </div>
-        </div>
-        <div class="leaderboard-stat">
-          🔥 ${u.streak || 0}
-        </div>
-      `;
+      card.innerHTML =
+        '<div class="leaderboard-rank">' + medal + '</div>' +
+        '<img src="' + (u.photoURL || "https://via.placeholder.com/52") + '">' +
+        '<div class="leaderboard-main">' +
+          '<strong>' + (u.name || "Unknown") + '</strong>' +
+          '<small>' + (u.book || "-") + ' ' + (u.chapter || 0) + '</small>' +
+        '</div>' +
+        '<div class="leaderboard-progress">' +
+          '<span>' + progress + ' / ' + TOTAL_CHAPTERS + ' chapters</span>' +
+          '<div class="progress-bar-container">' +
+            '<div class="progress-bar" style="width:' + percent + '%"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="leaderboard-stat">🔥 ' + (u.streak || 0) + '</div>';
     
       container.appendChild(card);
+    });
+
     });
 
 
