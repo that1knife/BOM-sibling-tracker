@@ -400,10 +400,11 @@ bookSelect.addEventListener("change", () => {
     const header = document.createElement("div");
     header.className = "leaderboard-row leaderboard-header";
     header.innerHTML = `
+      <div></div>
       <div>#</div>
       <div></div>
       <div>Name</div>
-      <div>${rankingMode === "progress" ? "Chapter" : "Streak"}</div>
+      <div>${rankingMode === "progress" ? "Progress" : "Streak"}</div>
     `;
     container.appendChild(header);
 
