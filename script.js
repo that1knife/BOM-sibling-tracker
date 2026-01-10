@@ -227,7 +227,7 @@ bookSelect.addEventListener("change", () => {
 
     document.getElementById("language").value = data.language || "";
 
-    if (data.book && BOOKS[data.book]) {
+    if (data.book && BOOKS_ORDERED.find(b => b.name === data.book)) {
       bookSelect.value = data.book;
       bookSelect.dispatchEvent(new Event("change"));
       if (data.chapter) {
@@ -384,114 +384,101 @@ bookSelect.addEventListener("change", () => {
 
   // 📖 Load all users
   async function loadUsers() {
-    const container = document.getElementById("userCards");
-    container.innerHTML = "";
-    container.className = ""; // 🔑 reset layout mode
+  const container = document.getElementById("userCards");
+  container.innerHTML = "";
 
-    const snapshot = await getDocs(collection(db, "users"));
-    let users = snapshot.docs.map(d => d.data());
-  
-    // SORT for rankings
-    if (viewMode === "rankings") {
-      if (rankingMode === "progress") {
-        users.sort((a, b) => {
-          const aProg = calculateProgress(a.book, a.chapter || 0);
-          const bProg = calculateProgress(b.book, b.chapter || 0);
-          return bProg - aProg;
-        });
-      } else if (rankingMode === "streak") {
-        users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
-      }
-    
-      // Header
-      const header = document.createElement("div");
-      header.className = "leaderboard-row leaderboard-header";
-      header.innerHTML = `
-        <div></div>
-        <div>#</div>
-        <div></div>
-        <div>Name</div>
-        <div>${rankingMode === "progress" ? "Progress" : "Streak"}</div>
+  const snapshot = await getDocs(collection(db, "users"));
+  let users = snapshot.docs.map(d => d.data());
+
+  /* ======================
+     RANKINGS VIEW
+  ====================== */
+  if (viewMode === "rankings") {
+    container.className = "leaderboard-cards";
+
+    if (rankingMode === "progress") {
+      users.sort((a, b) =>
+        calculateProgress(b.book, b.chapter || 0) -
+        calculateProgress(a.book, a.chapter || 0)
+      );
+    } else {
+      users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
+    }
+
+    users.forEach((u, i) => {
+      const progress = calculateProgress(u.book, u.chapter || 0);
+      const percent = Math.round((progress / TOTAL_CHAPTERS) * 100);
+
+      let medal = `#${i + 1}`;
+      if (i === 0) medal = "🥇";
+      else if (i === 1) medal = "🥈";
+      else if (i === 2) medal = "🥉";
+
+      const card = document.createElement("div");
+      card.className = "leaderboard-card";
+
+      card.innerHTML = `
+        <div class="lb-rank">${medal}</div>
+
+        <div class="lb-avatar">
+          <img src="${u.photoURL || "https://via.placeholder.com/52"}">
+        </div>
+
+        <div class="lb-info">
+          <div class="lb-name">${u.name || "Unknown"}</div>
+          <div class="lb-book">${u.book || "-"} ${u.chapter || 0}</div>
+        </div>
+
+        <div class="lb-streak">
+          🔥 ${u.streak || 0}
+        </div>
+
+        <div class="lb-progress">
+          <span>${progress} / ${TOTAL_CHAPTERS} chapters</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width:${percent}%"></div>
+          </div>
+        </div>
       `;
-      container.appendChild(header);
-  
-      container.className = "leaderboard-cards";
-      container.className = "overview-cards";
-      
-      users.forEach((u, i) => {
-        const progress = calculateProgress(u.book, u.chapter || 0);
-        const percent = Math.round((progress / TOTAL_CHAPTERS) * 100);
-      
-        const card = document.createElement("div");
-        card.className = "leaderboard-card";
-      
-        let medal = `#${i + 1}`;
-        if (i === 0) medal = "🥇";
-        else if (i === 1) medal = "🥈";
-        else if (i === 2) medal = "🥉";
-      
-        card.innerHTML = `
-          <div class="lb-rank">${medal}</div>
-        
-          <div class="lb-avatar">
-            <img src="${u.photoURL || "https://via.placeholder.com/52"}">
-          </div>
-        
-          <div class="lb-info">
-            <div class="lb-name">${u.name || "Unknown"}</div>
-            <div class="lb-book">${u.book || "-"} ${u.chapter || 0}</div>
-          </div>
-        
-          <div class="lb-streak">
-            🔥 <span>${u.streak || 0}</span>
-          </div>
-        
-          <div class="lb-progress">
-            <span>${progress} / ${TOTAL_CHAPTERS} chapters</span>
-            <div class="progress-bar-container">
-              <div class="progress-bar" style="width:${percent}%"></div>
-            </div>
-          </div>
-        `;
-  
-      
-        container.appendChild(card);
-      });
 
-    return;
+      container.appendChild(card);
+    });
+
+    return; // ⛔ stop here
   }
 
-  // OVERVIEW CARDS
+  /* ======================
+     OVERVIEW VIEW
+  ====================== */
+  container.className = "overview-cards";
+
   users.forEach(u => {
     const chapterNum = Number(u.chapter) || 0;
-    const bookName = u.book || "-";
-    const progressChapters = calculateProgress(u.book, chapterNum);
-    const progressPercent = (progressChapters / TOTAL_CHAPTERS) * 100;
-
+    const progress = calculateProgress(u.book, chapterNum);
+    const percent = (progress / TOTAL_CHAPTERS) * 100;
 
     const card = document.createElement("div");
-      card.className = "overview-card";
-      
-      card.innerHTML = `
-        <img src="${u.photoURL || "https://via.placeholder.com/64"}" />
-      
-        <div class="overview-name">${u.name || "Unknown"}</div>
-      
-        <div class="overview-book">
-          ${bookName} ${chapterNum}
-        </div>
-      
-        <div class="overview-streak">
-          🔥 ${u.streak || 0} day streak
-        </div>
-      
-        <div class="progress-bar-container">
-          <div class="progress-bar" style="width:${progressPercent}%"></div>
-        </div>
-      `;
-      
-      container.appendChild(card);
+    card.className = "overview-card";
+
+    card.innerHTML = `
+      <img src="${u.photoURL || "https://via.placeholder.com/64"}" />
+
+      <div class="overview-name">${u.name || "Unknown"}</div>
+
+      <div class="overview-book">
+        ${u.book || "-"} ${chapterNum}
+      </div>
+
+      <div class="overview-streak">
+        🔥 ${u.streak || 0} day streak
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width:${percent}%"></div>
+      </div>
+    `;
+
+    container.appendChild(card);
   });
 }
 
-});
