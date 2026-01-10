@@ -207,6 +207,51 @@ main {
   border-radius: 50%;
 }
 
+.overview-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.1);
+}
+
+.overview-card img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.overview-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.overview-book {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.overview-streak {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #ff6b00;
+}
+
+.overview-card .progress-bar-container {
+  height: 8px;
+  margin-top: 12px;
+}
+
+
 /* PROGRESS BAR */
 .progress-bar-container {
   background: #e0e0e0;
