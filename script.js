@@ -439,8 +439,6 @@ bookSelect.addEventListener("change", () => {
       container.appendChild(card);
     });
 
-
-
     return;
   }
 
