@@ -391,7 +391,7 @@ bookSelect.addEventListener("change", () => {
      RANKINGS VIEW
   ====================== */
   if (viewMode === "rankings") {
-    container.className = "leaderboard-cards card-base";
+    container.className = "leaderboard-cards";
 
     if (rankingMode === "progress") {
       users.sort((a, b) =>
