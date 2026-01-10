@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const landing = document.getElementById("landing");
   const loginBtnLanding = document.getElementById("loginBtnLanding");
 
-  let viewMode = "overview"; // or "rankings"
-  let rankingMode = "progress";
+  let viewMode = "overview";      // "overview" | "rankings"
+  let rankingMode = "progress";  // "progress" | "streak"
   let readingDays = [];
   let currentStreak = 0;
   
@@ -140,32 +140,29 @@ bookSelect.addEventListener("change", () => {
   const rankingsBtn = document.getElementById("rankingsBtn");
   const rankingTypeSelect = document.getElementById("rankingType");
   
-  overviewBtn.addEventListener("click", () => {
-    viewMode = "overview";
-    overviewBtn.classList.add("active");
-    rankingsBtn.classList.remove("active");
-    rankingTypeSelect.hidden = true;
+  function setView(mode) {
+    viewMode = mode;
+  
+    overviewBtn.classList.toggle("active", mode === "overview");
+    rankingsBtn.classList.toggle("active", mode === "rankings");
+  
+    rankingTypeSelect.hidden = mode !== "rankings";
+  
     loadUsers();
+  }
+  
+  overviewBtn.addEventListener("click", () => {
+    setView("overview");
   });
   
   rankingsBtn.addEventListener("click", () => {
-    viewMode = "rankings";
-    rankingsBtn.classList.add("active");
-    overviewBtn.classList.remove("active");
-    rankingTypeSelect.hidden = false;
-    loadUsers();
+    setView("rankings");
   });
   
   rankingTypeSelect.addEventListener("change", () => {
     rankingMode = rankingTypeSelect.value;
     loadUsers();
   });
-
-  // Ensure default view is rendered correctly on load
-    viewMode = "overview";
-    rankingTypeSelect.hidden = true;
-    overviewBtn.classList.add("active");
-    rankingsBtn.classList.remove("active");
 
   
   // 🔐 Login
@@ -237,7 +234,7 @@ bookSelect.addEventListener("change", () => {
   }
 
   document.getElementById("streakCount").textContent = currentStreak;
-  loadUsers();
+  setView("overview");
 });
 
 
