@@ -391,7 +391,7 @@ bookSelect.addEventListener("change", () => {
      RANKINGS VIEW
   ====================== */
   if (viewMode === "rankings") {
-    container.className = "leaderboard-cards";
+    container.className = "leaderboard-cards card-base";
 
     if (rankingMode === "progress") {
       users.sort((a, b) =>
@@ -412,7 +412,7 @@ bookSelect.addEventListener("change", () => {
       else if (i === 2) medal = "🥉";
 
       const card = document.createElement("div");
-      card.className = "leaderboard-card";
+      card.className = "leaderboard-card card-base";
 
       card.innerHTML = `
         <div class="lb-rank">${medal}</div>
@@ -455,7 +455,7 @@ bookSelect.addEventListener("change", () => {
     const percent = (progress / TOTAL_CHAPTERS) * 100;
 
     const card = document.createElement("div");
-    card.className = "overview-card";
+    card.className = "overview-card card-base";
 
     card.innerHTML = `
       <img src="${u.photoURL || "https://via.placeholder.com/64"}" />
