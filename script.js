@@ -182,67 +182,27 @@ function switchMobilePanel(name) {
 
   // 👀 Auth state listener
   onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    switchView("profile");
-  } else {
-    switchView("landing"); // or hide app entirely
-  }
   if (!user) {
-    // 🚪 LOGGED OUT
     landing.style.display = "flex";
-    appDiv.hidden = true;
-    loginBtn.hidden = false;
-    logoutBtn.hidden = true;
+    app.hidden = true;
     return;
   }
 
-  // 🔓 LOGGED IN (THIS RUNS FOR BOTH NEW + RETURNING USERS)
   landing.style.display = "none";
-  appDiv.hidden = false;
-  loginBtn.hidden = true;
-  logoutBtn.hidden = false;
+  app.hidden = false;
 
-  document.getElementById("profilePic").src =
-    user.photoURL || "https://via.placeholder.com/96";
-
-  const userRef = doc(db, "users", user.uid);
-  const snap = await getDoc(userRef);
-
-  if (!snap.exists()) {
-    // 🆕 First-time login
-    await setDoc(userRef, {
-      name: user.displayName,
-      email: user.email,
-      language: "",
-      book: "",
-      chapter: 0,
-      readingDays: [],
-      streak: 0,
-      photoURL: user.photoURL,
-      createdAt: new Date()
-    });
-  } else {
-    // 🔁 Returning user
-    const data = snap.data();
-
-    readingDays = data.readingDays || [];
-    currentStreak = data.streak || 0;
-    renderCalendar();
-
-    document.getElementById("language").value = data.language || "";
-
-    if (data.book && BOOKS_ORDERED.find(b => b.name === data.book)) {
-      bookSelect.value = data.book;
-      bookSelect.dispatchEvent(new Event("change"));
-      if (data.chapter) {
-        chapterSelect.value = data.chapter;
-      }
-    }
+  // Desktop: show both
+  if (window.innerWidth > 768) {
+    panels.profile.style.display = "block";
+    panels.community.style.display = "block";
+    loadUsers();
+  } 
+  // Mobile: default to profile
+  else {
+    switchMobilePanel("profile");
   }
-
-  document.getElementById("streakCount").textContent = currentStreak;
-  switchView("profile");
 });
+
 
 
   // Calendar
