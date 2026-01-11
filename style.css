@@ -21,6 +21,42 @@ html, body {
   background: #f5f6fa;
 }
 
+.desktop-layout {
+  display: flex;
+  height: calc(100vh - 64px);
+}
+
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none;
+  }
+
+  .profile-panel {
+    width: 360px;
+    border-right: 1px solid #ddd;
+  }
+
+  .dashboard-panel {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-layout {
+    flex-direction: column;
+  }
+
+  .profile-panel,
+  .dashboard-panel {
+    display: none;
+  }
+
+  main {
+    padding-bottom: 64px; /* space for nav */
+  }
+}
+
+
 /* HEADER */
 header {
   height: 64px;
