@@ -143,22 +143,23 @@ bookSelect.addEventListener("change", () => {
   const views = document.querySelectorAll(".view");
   const navButtons = document.querySelectorAll(".bottom-nav button");
   
-  function switchView(name) {
-    views.forEach(v => v.classList.remove("active"));
-    navButtons.forEach(b => b.classList.remove("active"));
-  
-    document.getElementById(`view-${name}`).classList.add("active");
-    document.querySelector(`.bottom-nav button[data-view="${name}"]`)
-      .classList.add("active");
-  
-    if (name === "community") loadUsers();
-  }
-  
-  navButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      switchView(btn.dataset.view);
-    });
-  });
+  const panels = {
+  profile: document.getElementById("profilePanel"),
+  community: document.getElementById("communityPanel")
+};
+
+function switchMobilePanel(name) {
+  Object.values(panels).forEach(p => p.style.display = "none");
+  panels[name].style.display = "block";
+
+  document.querySelectorAll(".bottom-nav button")
+    .forEach(b => b.classList.remove("active"));
+
+  document.querySelector(`[data-panel="${name}"]`)
+    .classList.add("active");
+
+  if (name === "community") loadUsers();
+}
   
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
@@ -169,6 +170,12 @@ bookSelect.addEventListener("change", () => {
       alert("Login failed. Check console for details.");
     }
   });
+
+  document.querySelectorAll(".bottom-nav button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    switchMobilePanel(btn.dataset.panel);
+  });
+});
 
   // 🚪 Logout
   logoutBtn.addEventListener("click", () => signOut(auth));
