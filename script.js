@@ -10,12 +10,14 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc,
   getDocs,
   collection
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 Firebase config
+/* ======================
+   FIREBASE SETUP
+====================== */
+
 const firebaseConfig = {
   apiKey: "AIzaSyCYN4w0tFj6aE-FJXYaCgm3KD7uvXbCHVc",
   authDomain: "bom-sibling-tracker-50515.firebaseapp.com",
@@ -25,34 +27,18 @@ const firebaseConfig = {
   appId: "1:352637559910:web:ccbb4c93a23f6fe51fb9a7"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
 const provider = new GoogleAuthProvider();
 
-// Wait for DOM
-document.addEventListener("DOMContentLoaded", () => {
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const appDiv = document.getElementById("app");
-  const saveProfileBtn = document.getElementById("saveProfile");
-  const landing = document.getElementById("landing");
-  const loginBtnLanding = document.getElementById("loginBtnLanding");
+/* ======================
+   CONSTANTS
+====================== */
 
-  let viewMode = "overview";      // "overview" | "rankings"
-  let rankingMode = "progress";  // "progress" | "streak"
-  let readingDays = [];
-  let currentStreak = 0;
-  
-  const START_DATE = new Date(2026, 0, 1)
-  let currentMonth = new Date();
-  currentMonth.setDate(1);
+const START_DATE = new Date(2026, 0, 1);
+const TOTAL_CHAPTERS = 239;
 
-
-
-
-// Set BOM books
 const BOOKS_ORDERED = [
   { name: "1 Nephi", chapters: 22 },
   { name: "2 Nephi", chapters: 33 },
@@ -71,395 +57,208 @@ const BOOKS_ORDERED = [
   { name: "Moroni", chapters: 10 }
 ];
 
-const TOTAL_CHAPTERS = 239;
+/* ======================
+   APP STATE
+====================== */
 
+let viewMode = "overview";
+let rankingMode = "progress";
+let readingDays = [];
+let currentStreak = 0;
+let currentMonth = new Date(new Date().setDate(1));
 
-const bookSelect = document.getElementById("book");
-const chapterSelect = document.getElementById("chapter");
+/* ======================
+   DOM READY
+====================== */
 
-// Populate book dropdown
-function initBookDropdown() {
-  if (!bookSelect || bookSelect.children.length > 0) return;
+document.addEventListener("DOMContentLoaded", () => {
 
-  BOOKS_ORDERED.forEach(b => {
-    const option = document.createElement("option");
-    option.value = b.name;
-    option.textContent = b.name;
-    bookSelect.appendChild(option);
-  });
-}
+  /* ---------- DOM LOOKUPS ---------- */
 
+  const $ = id => document.getElementById(id);
 
+  const loginBtn = $("loginBtn");
+  const logoutBtn = $("logoutBtn");
+  const loginBtnLanding = $("loginBtnLanding");
+  const saveProfileBtn = $("saveProfile");
+  const landing = $("landing");
+  const appRoot = $("app");
 
-// When book changes → update chapters
-bookSelect.addEventListener("change", () => {
-  const selectedBook = bookSelect.value;
-  chapterSelect.innerHTML = '<option value="">Select chapter</option>';
-  chapterSelect.value = "";
+  const bookSelect = $("book");
+  const chapterSelect = $("chapter");
 
-  if (!selectedBook) {
-    chapterSelect.disabled = true;
-    return;
-  }
+  const overviewBtn = $("overviewBtn");
+  const rankingsBtn = $("rankingsBtn");
+  const rankingTypeSelect = $("rankingType");
 
-  const bookData = BOOKS_ORDERED.find(b => b.name === selectedBook);
-  const totalChapters = bookData ? bookData.chapters : 0;
+  const panels = {
+    profile: $("profilePanel"),
+    community: $("communityPanel")
+  };
 
-  chapterSelect.disabled = false;
+  /* ======================
+     HELPERS
+  ====================== */
 
-  for (let i = 1; i <= totalChapters; i++) {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = i;
-    chapterSelect.appendChild(opt);
-  }
-});
-
-  loginBtnLanding.addEventListener("click", async () => {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      alert("Sign-in failed");
-      console.error(err);
-    }
-  });
-
-  // Calculate reading progress
-  function calculateProgress(book, chapter) {
+  function calculateProgress(book, chapter = 0) {
     let completed = 0;
-  
     for (const b of BOOKS_ORDERED) {
-      if (b.name === book) {
-        completed += chapter;
-        break;
-      }
+      if (b.name === book) return completed + chapter;
       completed += b.chapters;
     }
-  
-    return completed; // 0 → 239
+    return completed;
   }
 
-  
-  // View buttons
-  const overviewBtn = document.getElementById("overviewBtn");
-  const rankingsBtn = document.getElementById("rankingsBtn");
-  const rankingTypeSelect = document.getElementById("rankingType");
-  const navButtons = document.querySelectorAll(".bottom-nav button");
-  
-  const panels = {
-  profile: document.getElementById("profilePanel"),
-  community: document.getElementById("communityPanel")
-};
-
-function switchMobilePanel(name) {
-  Object.values(panels).forEach(p => p.style.display = "none");
-
-  if (!panels[name]) return;
-
-  panels[name].style.display = "block";
-
-  document.querySelectorAll(".bottom-nav button")
-    .forEach(b => b.classList.remove("active"));
-
-  const activeBtn = document.querySelector(`[data-panel="${name}"]`);
-  if (activeBtn) activeBtn.classList.add("active");
-
-  if (name === "profile") {
-    initBookDropdown(); // ✅ NOW the element exists
-  }
-
-  if (name === "community") {
-    requestAnimationFrame(loadUsers);
-  }
-}
-
-  
-  // 🔐 Login
-  loginBtn.addEventListener("click", async () => {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      console.error("Login error:", err);
-      alert("Login failed. Check console for details.");
-    }
-  });
-
-  document.querySelectorAll(".bottom-nav button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    switchMobilePanel(btn.dataset.panel);
-  });
-});
-
-  // 🚪 Logout
-  logoutBtn.addEventListener("click", () => signOut(auth));
-
-  // 👀 Auth state listener
-  onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    landing.style.display = "flex";
-    app.hidden = true;
-    return;
-  }
-
-  landing.style.display = "none";
-  app.hidden = false;
-
-  if (window.innerWidth > 768) {
-    panels.profile.style.display = "block";
-    panels.community.style.display = "block";
-    loadUsers();
-  } else {
-    switchMobilePanel("profile"); // ❗ DO NOT load users here
-  }
-});
-
-
-
-  // Calendar
-  function renderCalendar() {
-    const grid = document.getElementById("calendarGrid");
-    const label = document.getElementById("calendarMonth");
-  
-    grid.innerHTML = "";
-    label.textContent = currentMonth.toLocaleString("default", {
-      month: "long",
-      year: "numeric"
+  function initBookDropdown() {
+    if (!bookSelect || bookSelect.children.length) return;
+    BOOKS_ORDERED.forEach(b => {
+      const opt = document.createElement("option");
+      opt.value = b.name;
+      opt.textContent = b.name;
+      bookSelect.appendChild(opt);
     });
-  
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
-    const today = new Date();
-  
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-  
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month, day);
-      const dateStr = date.toISOString().split("T")[0];
-  
-      const div = document.createElement("div");
-      div.className = "calendar-day";
-      div.textContent = day;
-  
-      const isTooEarly = date < START_DATE;
-      const isFuture = date > today;
-  
-      if (isTooEarly || isFuture) {
-        div.classList.add("disabled");
-      } else {
-        if (readingDays.includes(dateStr)) {
-          div.classList.add("marked");
-        }
-  
-        div.addEventListener("click", () => {
-          toggleReadingDay(dateStr);
-        });
-      }
-  
-      grid.appendChild(div);
-    }
   }
 
-  function toggleReadingDay(dateStr) {
-    if (readingDays.includes(dateStr)) {
-      readingDays = readingDays.filter(d => d !== dateStr);
-    } else {
-      readingDays.push(dateStr);
-    }
-  
-    readingDays.sort();
-    updateStreak();
-    saveCalendar();
-    renderCalendar();
+  /* ======================
+     MOBILE PANEL SWITCH
+  ====================== */
+
+  function switchMobilePanel(name) {
+    Object.values(panels).forEach(p => p && (p.style.display = "none"));
+    if (!panels[name]) return;
+
+    panels[name].style.display = "block";
+
+    document
+      .querySelectorAll(".bottom-nav button")
+      .forEach(b => b.classList.remove("active"));
+
+    document
+      .querySelector(`[data-panel="${name}"]`)
+      ?.classList.add("active");
+
+    if (name === "profile") initBookDropdown();
+    if (name === "community") requestAnimationFrame(loadUsers);
   }
 
-  //Streak updating
-  function updateStreak() {
-    let streak = 0;
-    let day = new Date();
-  
-    while (true) {
-      const dateStr = day.toISOString().split("T")[0];
-      if (readingDays.includes(dateStr)) {
-        streak++;
-        day.setDate(day.getDate() - 1);
-      } else {
-        break;
-      }
-    }
-  
-    currentStreak = streak;
-    document.getElementById("streakCount").textContent = currentStreak;
-  }
+  /* ======================
+     AUTH EVENTS
+  ====================== */
 
-  async function saveCalendar() {
-    const user = auth.currentUser;
-    if (!user) return;
-  
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        readingDays,
-        streak: currentStreak
-      },
-      { merge: true }
+  if (loginBtn)
+    loginBtn.onclick = () => signInWithPopup(auth, provider);
+
+  if (loginBtnLanding)
+    loginBtnLanding.onclick = () => signInWithPopup(auth, provider);
+
+  if (logoutBtn)
+    logoutBtn.onclick = () => signOut(auth);
+
+  /* ======================
+     NAV BUTTONS
+  ====================== */
+
+  document
+    .querySelectorAll(".bottom-nav button")
+    .forEach(btn =>
+      btn.addEventListener("click", () =>
+        switchMobilePanel(btn.dataset.panel)
+      )
     );
-  
-    loadUsers();
+
+  /* ======================
+     BOOK → CHAPTER LINK
+  ====================== */
+
+  if (bookSelect && chapterSelect) {
+    bookSelect.addEventListener("change", () => {
+      chapterSelect.innerHTML = `<option value="">Select chapter</option>`;
+      const book = BOOKS_ORDERED.find(b => b.name === bookSelect.value);
+      if (!book) return;
+
+      for (let i = 1; i <= book.chapters; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        chapterSelect.appendChild(opt);
+      }
+    });
   }
 
+  /* ======================
+     AUTH STATE
+  ====================== */
 
-  document.getElementById("prevMonth").onclick = () => {
-    const prev = new Date(currentMonth);
-    prev.setMonth(prev.getMonth() - 1);
-    if (prev >= START_DATE) {
-      currentMonth = prev;
-      renderCalendar();
-    }
-  };
-  
-  document.getElementById("nextMonth").onclick = () => {
-    const next = new Date(currentMonth);
-    next.setMonth(next.getMonth() + 1);
-    if (next <= new Date()) {
-      currentMonth = next;
-      renderCalendar();
-    }
-  };
-
-
-  // 💾 Save profile
-  saveProfileBtn.addEventListener("click", async () => {
-    const user = auth.currentUser;
-    if (!user) return;
-  
-    const language = document.getElementById("language").value;
-    const book = bookSelect.value;
-    const chapter = Number(chapterSelect.value) || 0;
-  
-    if (!book || !chapter) {
-      alert("Please select a book and chapter first.");
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      landing.style.display = "flex";
+      appRoot.hidden = true;
       return;
     }
-  
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        language,
-        book,
-        chapter,
-        updatedAt: new Date()
-      },
-      { merge: true }
-    );
-  
-    loadUsers();
+
+    landing.style.display = "none";
+    appRoot.hidden = false;
+
+    if (window.innerWidth > 768) {
+      panels.profile.style.display = "block";
+      panels.community.style.display = "block";
+      loadUsers();
+    } else {
+      switchMobilePanel("profile");
+    }
   });
 
+  /* ======================
+     SAVE PROFILE
+  ====================== */
 
-  // 📖 Load all users
-  async function loadUsers() {
-  const container = document.getElementById("userCards");
+  if (saveProfileBtn)
+    saveProfileBtn.onclick = async () => {
+      const user = auth.currentUser;
+      if (!user || !bookSelect || !chapterSelect) return;
 
-  if (!container) {
-    console.warn("⚠️ userCards container not found. Skipping loadUsers().");
-    return;
-  }
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          book: bookSelect.value,
+          chapter: Number(chapterSelect.value || 0),
+          updatedAt: new Date()
+        },
+        { merge: true }
+      );
 
-  container.innerHTML = "";
-
-  const snapshot = await getDocs(collection(db, "users"));
-  let users = snapshot.docs.map(d => d.data());
+      loadUsers();
+    };
 
   /* ======================
-     RANKINGS VIEW
+     LOAD USERS
   ====================== */
-  if (viewMode === "rankings") {
-    container.className = "leaderboard-cards";
 
-    if (rankingMode === "progress") {
-      users.sort((a, b) =>
-        calculateProgress(b.book, b.chapter || 0) -
-        calculateProgress(a.book, a.chapter || 0)
-      );
-    } else {
-      users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
-    }
+  async function loadUsers() {
+    const container = $("userCards");
+    if (!container) return;
 
-    users.forEach((u, i) => {
+    container.innerHTML = "";
+    const snap = await getDocs(collection(db, "users"));
+    const users = snap.docs.map(d => d.data());
+
+    users.forEach(u => {
       const progress = calculateProgress(u.book, u.chapter || 0);
-      const percent = Math.round((progress / TOTAL_CHAPTERS) * 100);
-
-      let medal = `#${i + 1}`;
-      if (i === 0) medal = "🥇";
-      else if (i === 1) medal = "🥈";
-      else if (i === 2) medal = "🥉";
+      const percent = (progress / TOTAL_CHAPTERS) * 100;
 
       const card = document.createElement("div");
-      card.className = "leaderboard-card card-base";
-
+      card.className = "overview-card card-base";
       card.innerHTML = `
-        <div class="lb-rank">${medal}</div>
-
-        <div class="lb-avatar">
-          <img src="${u.photoURL || "https://via.placeholder.com/52"}">
-        </div>
-
-        <div class="lb-info">
-          <div class="lb-name">${u.name || "Unknown"}</div>
-          <div class="lb-book">${u.book || "-"} ${u.chapter || 0}</div>
-        </div>
-
-        <div class="lb-streak">
-          🔥 ${u.streak || 0}
-        </div>
-
-        <div class="lb-progress">
-          <span>${progress} / ${TOTAL_CHAPTERS} chapters</span>
-          <div class="progress-bar-container">
-            <div class="progress-bar" style="width:${percent}%"></div>
-          </div>
+        <img src="${u.photoURL || "https://via.placeholder.com/64"}">
+        <div class="overview-name">${u.name || "Unknown"}</div>
+        <div>${u.book || "-"} ${u.chapter || 0}</div>
+        <div>🔥 ${u.streak || 0}</div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width:${percent}%"></div>
         </div>
       `;
-
       container.appendChild(card);
     });
-
-    return; // ⛔ stop here
   }
-
-  /* ======================
-     OVERVIEW VIEW
-  ====================== */
-  container.className = "overview-cards";
-
-  users.forEach(u => {
-    const chapterNum = Number(u.chapter) || 0;
-    const progress = calculateProgress(u.book, chapterNum);
-    const percent = (progress / TOTAL_CHAPTERS) * 100;
-
-    const card = document.createElement("div");
-    card.className = "overview-card card-base";
-
-    card.innerHTML = `
-      <img src="${u.photoURL || "https://via.placeholder.com/64"}" />
-
-      <div class="overview-name">${u.name || "Unknown"}</div>
-
-      <div class="overview-book">
-        ${u.book || "-"} ${chapterNum}
-      </div>
-
-      <div class="overview-streak">
-        🔥 ${u.streak || 0} day streak
-      </div>
-
-      <div class="progress-bar-container">
-        <div class="progress-bar" style="width:${percent}%"></div>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
 
 });
