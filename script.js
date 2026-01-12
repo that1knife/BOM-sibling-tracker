@@ -349,6 +349,12 @@ function switchMobilePanel(name) {
   // 📖 Load all users
   async function loadUsers() {
   const container = document.getElementById("userCards");
+
+  if (!container) {
+    console.warn("⚠️ userCards container not found. Skipping loadUsers().");
+    return;
+  }
+
   container.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "users"));
