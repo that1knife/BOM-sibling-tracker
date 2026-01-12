@@ -150,15 +150,20 @@ bookSelect.addEventListener("change", () => {
 
 function switchMobilePanel(name) {
   Object.values(panels).forEach(p => p.style.display = "none");
+
+  if (!panels[name]) return;
+
   panels[name].style.display = "block";
 
   document.querySelectorAll(".bottom-nav button")
     .forEach(b => b.classList.remove("active"));
 
-  document.querySelector(`[data-panel="${name}"]`)
-    .classList.add("active");
+  const activeBtn = document.querySelector(`[data-panel="${name}"]`);
+  if (activeBtn) activeBtn.classList.add("active");
 
-  if (name === "community") loadUsers();
+  if (name === "community") {
+    requestAnimationFrame(loadUsers);
+  }
 }
   
   // 🔐 Login
