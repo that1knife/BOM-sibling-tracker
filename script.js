@@ -78,12 +78,17 @@ const bookSelect = document.getElementById("book");
 const chapterSelect = document.getElementById("chapter");
 
 // Populate book dropdown
-BOOKS_ORDERED.forEach(b => {
-  const option = document.createElement("option");
-  option.value = b.name;
-  option.textContent = b.name;
-  bookSelect.appendChild(option);
-});
+function initBookDropdown() {
+  if (!bookSelect || bookSelect.children.length > 0) return;
+
+  BOOKS_ORDERED.forEach(b => {
+    const option = document.createElement("option");
+    option.value = b.name;
+    option.textContent = b.name;
+    bookSelect.appendChild(option);
+  });
+}
+
 
 
 // When book changes → update chapters
@@ -159,10 +164,15 @@ function switchMobilePanel(name) {
   const activeBtn = document.querySelector(`[data-panel="${name}"]`);
   if (activeBtn) activeBtn.classList.add("active");
 
+  if (name === "profile") {
+    initBookDropdown(); // ✅ NOW the element exists
+  }
+
   if (name === "community") {
     requestAnimationFrame(loadUsers);
   }
 }
+
   
   // 🔐 Login
   loginBtn.addEventListener("click", async () => {
