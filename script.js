@@ -139,8 +139,6 @@ bookSelect.addEventListener("change", () => {
   const overviewBtn = document.getElementById("overviewBtn");
   const rankingsBtn = document.getElementById("rankingsBtn");
   const rankingTypeSelect = document.getElementById("rankingType");
-  
-  const views = document.querySelectorAll(".view");
   const navButtons = document.querySelectorAll(".bottom-nav button");
   
   const panels = {
@@ -196,15 +194,12 @@ function switchMobilePanel(name) {
   landing.style.display = "none";
   app.hidden = false;
 
-  // Desktop: show both
   if (window.innerWidth > 768) {
     panels.profile.style.display = "block";
     panels.community.style.display = "block";
     loadUsers();
-  } 
-  // Mobile: default to profile
-  else {
-    switchMobilePanel("profile");
+  } else {
+    switchMobilePanel("profile"); // ❗ DO NOT load users here
   }
 });
 
