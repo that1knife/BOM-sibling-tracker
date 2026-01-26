@@ -158,14 +158,40 @@ document.addEventListener("DOMContentLoaded", () => {
      NAV BUTTONS
   ====================== */
 
-  document
-    .querySelectorAll(".bottom-nav button")
-    .forEach(btn =>
-      btn.addEventListener("click", () =>
-        switchMobilePanel(btn.dataset.panel)
-      )
-    );
 
+  let activeView = "home";
+
+  const viewPanels = {
+    home: document.getElementById("homePanel"),
+    family: document.getElementById("familyPanel"),
+    practice: document.getElementById("practicePanel"),
+    profile: document.getElementById("profilePanel")
+  };
+  
+  function setView(view) {
+    activeView = view;
+  
+    Object.values(viewPanels).forEach(p =>
+      p && p.classList.remove("active")
+    );
+  
+    viewPanels[view]?.classList.add("active");
+  
+    document
+      .querySelectorAll("[data-view]")
+      .forEach(b => b.classList.toggle(
+        "active",
+        b.dataset.view === view
+      ));
+  }
+
+    document.querySelectorAll(".top-nav button").forEach(btn => {
+    btn.onclick = () => setView(btn.dataset.view);
+  });
+
+  
+
+  
   /* ======================
      BOOK → CHAPTER LINK
   ====================== */
