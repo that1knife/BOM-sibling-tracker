@@ -168,6 +168,86 @@ header button:hover {
   box-shadow: 0 8px 18px rgba(0,0,0,0.25);
 }
 
+/* ---------- NAV ---------- */
+
+.top-nav {
+  display: none;
+  height: 64px;
+  background: linear-gradient(to right, #1f2933, #111827);
+  color: white;
+  padding: 0 32px;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-nav .nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.top-nav button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.top-nav button.active {
+  background: rgba(255,255,255,.15);
+}
+
+/* ---------- DESKTOP ---------- */
+
+@media (min-width: 900px) {
+  .top-nav {
+    display: flex;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .desktop-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 32px;
+    max-width: 1400px;
+    margin: auto;
+  }
+
+  .panel {
+    display: none;
+  }
+
+  .panel.active {
+    display: block;
+  }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 899px) {
+  .bottom-nav {
+    display: flex;
+  }
+
+  .top-nav {
+    display: none;
+  }
+
+  .panel {
+    display: none;
+  }
+
+  .panel.active {
+    display: block;
+  }
+}
+
 
 /* MAIN LAYOUT */
 main {
