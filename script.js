@@ -91,10 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const rankingsBtn = $("rankingsBtn");
   const rankingTypeSelect = $("rankingType");
 
-  const panels = {
-    profile: $("profilePanel"),
-    community: $("communityPanel")
-  };
 
   /* ======================
      HELPERS
@@ -123,23 +119,49 @@ document.addEventListener("DOMContentLoaded", () => {
      MOBILE PANEL SWITCH
   ====================== */
 
-  function switchMobilePanel(name) {
-    Object.values(panels).forEach(p => p && (p.style.display = "none"));
-    if (!panels[name]) return;
+  /* ======================
+   VIEW SYSTEM
+====================== */
 
-    panels[name].style.display = "block";
+const panels = {
+  home: document.getElementById("homePanel"),
+  family: document.getElementById("familyPanel"),
+  practice: document.getElementById("practicePanel"),
+  profile: document.getElementById("profilePanel"),
+  settings: document.getElementById("settingsPanel")
+};
 
-    document
-      .querySelectorAll(".bottom-nav button")
-      .forEach(b => b.classList.remove("active"));
+let activeView = "home";
 
-    document
-      .querySelector(`[data-panel="${name}"]`)
-      ?.classList.add("active");
+function setView(view) {
+  activeView = view;
 
-    if (name === "profile") initBookDropdown();
-    if (name === "community") requestAnimationFrame(loadUsers);
-  }
+  Object.values(panels).forEach(p =>
+    p && p.classList.remove("active")
+  );
+
+  panels[view]?.classList.add("active");
+
+  document
+    .querySelectorAll("[data-view]")
+    .forEach(btn =>
+      btn.classList.toggle(
+        "active",
+        btn.dataset.view === view
+      )
+    );
+}
+
+/* bind nav buttons */
+
+document.querySelectorAll(".top-nav button[data-view]").forEach(btn => {
+  btn.onclick = () => setView(btn.dataset.view);
+});
+
+document.querySelectorAll(".bottom-nav button").forEach(btn => {
+  btn.onclick = () => setView(btn.dataset.view);
+});
+
 
   /* ======================
      AUTH EVENTS
@@ -216,23 +238,19 @@ document.addEventListener("DOMContentLoaded", () => {
   ====================== */
 
   onAuthStateChanged(auth, user => {
-    if (!user) {
-      landing.style.display = "flex";
-      appRoot.hidden = true;
-      return;
-    }
+  if (!user) {
+    landing.style.display = "flex";
+    appRoot.hidden = true;
+    return;
+  }
 
-    landing.style.display = "none";
-    appRoot.hidden = false;
+  landing.style.display = "none";
+  appRoot.hidden = false;
 
-    if (window.innerWidth > 768) {
-      panels.profile.style.display = "block";
-      panels.community.style.display = "block";
-      loadUsers();
-    } else {
-      switchMobilePanel("profile");
-    }
-  });
+  setView("home");
+  loadUsers();
+});
+
 
   /* ======================
      SAVE PROFILE
