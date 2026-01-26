@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Book of Mormon Progress</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Family Reading Tracker</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-  <h1>📖 Family Reading Tracker</h1>
-  <button id="loginBtn">Sign in with Google</button>
-  <button id="logoutBtn" hidden>Logout</button>
-</header>
+<!-- LANDING -->
 <section id="landing" class="landing">
   <div class="overlay"></div>
 
@@ -28,35 +24,35 @@
     </button>
   </div>
 </section>
-  
-<nav class="bottom-nav">
-  <button data-panel="profile">👤</button>
-  <button data-panel="community">👥</button>
-  <button data-panel="learning">📘</button>
-  <button data-panel="settings">⚙️</button>
-</nav>
 
+<!-- TOP NAV (DESKTOP) -->
 <nav class="top-nav">
-  <div class="logo">Family Reading Tracker</div>
+  <div class="logo">📖 Family Reading Tracker</div>
 
   <div class="nav-links">
     <button data-view="home" class="active">Home</button>
     <button data-view="family">Family</button>
     <button data-view="practice">Practice</button>
     <button data-view="profile">Profile</button>
+    <button data-view="settings">Settings</button>
   </div>
+
+  <button id="logoutBtn" class="logout-btn">Logout</button>
 </nav>
 
+<!-- APP -->
 <main id="app" hidden>
+
   <div class="desktop-layout">
 
-    <!-- PROFILE -->
-    <section id="profilePanel" class="panel profile-panel">
-      <!-- EXISTING PROFILE CONTENT GOES HERE (unchanged) -->
+    <!-- HOME -->
+    <section id="homePanel" class="panel active">
+      <h2>Welcome 👋</h2>
+      <p>Your daily progress and streak will live here.</p>
     </section>
 
-    <!-- COMMUNITY -->
-    <section id="communityPanel" class="panel dashboard-panel">
+    <!-- FAMILY -->
+    <section id="familyPanel" class="panel dashboard-panel">
       <h2>Family Progress</h2>
 
       <div class="dashboard-controls">
@@ -71,14 +67,37 @@
         </select>
       </div>
 
-      <div id="userCards"></div>
+      <div id="userCards" class="overview-cards"></div>
+    </section>
+
+    <!-- PRACTICE -->
+    <section id="practicePanel" class="panel">
+      <h2>Practice</h2>
+      <p>Flashcards & learning tools coming soon.</p>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profilePanel" class="panel profile-panel">
+      <!-- existing profile content stays -->
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="settingsPanel" class="panel">
+      <h2>Settings</h2>
+      <p>Theme, notifications, preferences later.</p>
     </section>
 
   </div>
 </main>
 
-
-
+<!-- BOTTOM NAV (MOBILE) -->
+<nav class="bottom-nav">
+  <button data-view="home">🏠</button>
+  <button data-view="family">👥</button>
+  <button data-view="practice">📘</button>
+  <button data-view="profile">👤</button>
+  <button data-view="settings">⚙️</button>
+</nav>
 
 <script type="module" src="script.js"></script>
 </body>
