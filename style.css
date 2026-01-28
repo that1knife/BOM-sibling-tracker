@@ -673,3 +673,60 @@ main {
 }
 
 
+/* ---------- GLOBAL PANELS ---------- */
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+/* ---------- NAV VISIBILITY ---------- */
+
+@media (min-width: 900px) {
+  .top-nav {
+    display: flex;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  main {
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 899px) {
+  .top-nav {
+    display: none;
+  }
+
+  .bottom-nav {
+    display: flex;
+  }
+
+  main {
+    padding-bottom: 64px;
+  }
+}
+
+/* ---------- LOGOUT ---------- */
+
+.logout-btn {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.logout-btn:hover {
+  opacity: 0.9;
+}
+
+
