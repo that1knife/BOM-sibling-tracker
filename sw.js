@@ -1,12 +1,15 @@
 const CACHE_NAME = "bom-tracker-v1";
 
+const BASE = "/BOM-sibling-tracker";
+
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/style.css",
-  "/script.js",
-  "/manifest.json"
+  `${BASE}/`,
+  `${BASE}/index.html`,
+  `${BASE}/style.css`,
+  `${BASE}/script.js`,
+  `${BASE}/manifest.json`
 ];
+
 
 // Install
 self.addEventListener("install", event => {
