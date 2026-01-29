@@ -10,6 +10,11 @@
   --accent: #4f7cff;
 }
 
+body.pwa {
+  height: 100vh;
+  overscroll-behavior: none;
+}
+
 * {
   box-sizing: border-box;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
