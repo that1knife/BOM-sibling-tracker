@@ -67,7 +67,7 @@ let readingDays = [];
 let currentStreak = 0;
 let currentMonth = new Date(new Date().setDate(1));
 
-/* PWA Mobile check */
+/* -===- PWA Mobile check and setup -===- */
 
 const isStandalone =
   window.matchMedia("(display-mode: standalone)").matches ||
@@ -75,6 +75,12 @@ const isStandalone =
 
 if (isStandalone) {
   document.body.classList.add("pwa");
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js");
+  });
 }
 
 /* ======================
@@ -124,11 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bookSelect.appendChild(opt);
     });
   }
-
-  /* ======================
-     MOBILE PANEL SWITCH
-  ====================== */
-
+  
   /* ======================
    VIEW SYSTEM
 ====================== */
