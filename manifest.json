@@ -1,18 +1,19 @@
 {
-  "name": "Family Reading Tracker",
-  "short_name": "Reading",
-  "start_url": "/",
+  "name": "BOM Family Tracker",
+  "short_name": "BOM Tracker",
+  "start_url": "/BOM-sibling-tracker/",
+  "scope": "/BOM-sibling-tracker/",
   "display": "standalone",
-  "background_color": "#f5f6fa",
-  "theme_color": "#1e1e2f",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/BOM-sibling-tracker/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/BOM-sibling-tracker/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
