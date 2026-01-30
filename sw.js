@@ -1,4 +1,4 @@
-const CACHE_NAME = "bom-cache-v2";
+const CACHE_NAME = "bom-cache-v3";
 
 const BASE = "/BOM-sibling-tracker";
 
@@ -9,7 +9,6 @@ const ASSETS = [
   `${BASE}/script.js`,
   `${BASE}/manifest.json`
 ];
-
 
 // Install
 self.addEventListener("install", event => {
@@ -35,25 +34,18 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
-// Fetch
+// Fetch — network first for HTML, cache for others
 self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(res =>
-      res || fetch(event.request)
-    )
-  );
-});
+  const req = event.request;
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      )
-    )
+  if (req.mode === "navigate") {
+    event.respondWith(
+      fetch(req).catch(() => caches.match(`${BASE}/index.html`))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(req).then(res => res || fetch(req))
   );
 });
