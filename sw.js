@@ -1,4 +1,4 @@
-const CACHE_NAME = "bom-tracker-v1";
+const CACHE_NAME = "bom-cache-v2";
 
 const BASE = "/BOM-sibling-tracker";
 
@@ -40,6 +40,20 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(res =>
       res || fetch(event.request)
+    )
+  );
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
     )
   );
 });
