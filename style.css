@@ -735,3 +735,36 @@ main {
 }
 
 
+/* ======================
+   HOME DASHBOARD GRID
+====================== */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.home-left,
+.home-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.home-card {
+  padding: 20px;
+}
+
+/* MOBILE: collapse to one column */
+@media (max-width: 900px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-right {
+    display: none;
+  }
+}
+
+
