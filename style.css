@@ -754,7 +754,10 @@ main {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  padding-left: 32px;
+  border-left: 1px solid #e5e7eb;
 }
+
 
 /* profile block */
 
@@ -798,5 +801,40 @@ main {
   .home-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+.home-logger label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.home-logger select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.home-logger button {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.home-logger button:hover {
+  opacity: 0.9;
+}
+
+.home-right .overview-cards {
+  padding-top: 8px;
 }
 
