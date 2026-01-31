@@ -109,6 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const rankingsBtn = $("rankingsBtn");
   const rankingTypeSelect = $("rankingType");
 
+  initBookDropdown();
+
 
   /* ======================
      HELPERS
@@ -302,7 +304,7 @@ async function loadHomeProfile(user) {
 
     if (!container) return;
 
-
+    container.innerHTML = "";
     const snap = await getDocs(collection(db, "users"));
     const users = snap.docs.map(d => d.data());
 
