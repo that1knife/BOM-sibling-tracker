@@ -13,6 +13,8 @@ import {
   getDocs,
   collection
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getDoc } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* ======================
    FIREBASE SETUP
@@ -233,12 +235,15 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
 
 async function loadHomeProfile(user) {
 
-  const snap = await getDocs(collection(db, "users"));
-  const meRef = snap.docs.find(d => d.id === user.uid);
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
 
-  if (!meRef) return;
+  if (!snap.exists()) {
+    console.warn("No profile yet for user");
+    return;
+  }
 
-  const me = meRef.data();
+  const me = snap.data();
 
   const progress = calculateProgress(me.book, me.chapter || 0);
   const percent = Math.round(progress / TOTAL_CHAPTERS * 100);
@@ -260,6 +265,7 @@ async function loadHomeProfile(user) {
   document.getElementById("homePercent").textContent =
     `${percent}% complete`;
 }
+
 
 
   
