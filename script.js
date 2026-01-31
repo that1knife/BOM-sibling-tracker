@@ -289,6 +289,7 @@ async function loadHomeProfile(user) {
       );
 
       loadUsers();
+      loadHomeProfile(user);
     };
 
   /* ======================
