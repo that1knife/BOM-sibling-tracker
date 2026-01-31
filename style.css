@@ -735,36 +735,68 @@ main {
 }
 
 
-/* ======================
-   HOME DASHBOARD GRID
-====================== */
+
+/* ---------- HOME LAYOUT ---------- */
 
 .home-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 32px;
 }
 
-.home-left,
-.home-right {
+.home-left {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.home-card {
-  padding: 20px;
+.home-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-/* MOBILE: collapse to one column */
+/* profile block */
+
+.home-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.home-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+}
+
+.home-progress {
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.home-book {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* logger */
+
+.home-logger {
+  padding: 18px;
+}
+
+.home-logger h3 {
+  margin-top: 0;
+}
+
+/* mobile stack */
+
 @media (max-width: 900px) {
   .home-grid {
     grid-template-columns: 1fr;
   }
-
-  .home-right {
-    display: none;
-  }
 }
-
 
