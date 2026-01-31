@@ -73,44 +73,60 @@
 
   <div class="home-grid">
 
-    <!-- LEFT COLUMN -->
+    <!-- LEFT -->
     <div class="home-left">
 
-      <div class="card-base home-card">
-        <h2>Welcome</h2>
-        <p>Your daily progress and streak.</p>
+      <div class="home-profile">
+        <img id="homeAvatar" class="home-avatar" />
+        <h2 id="homeName">Loading...</h2>
       </div>
 
-      <div class="card-base home-card">
-        <h3>My main reading</h3>
-        <p>Language, Book, Chapter UI goes here soon.</p>
+      <div class="home-progress">
+        <div class="home-book" id="homeBook">—</div>
+
+        <div class="progress-bar-container">
+          <div id="homeProgressBar" class="progress-bar"></div>
+        </div>
+
+        <small id="homePercent"></small>
       </div>
 
-      <div class="card-base home-card">
-        <h3>Reading calendar</h3>
-        <p>Calendar component later.</p>
+      <!-- Reading Logger -->
+      <div class="home-logger card-base">
+
+        <h3>Log Reading</h3>
+
+        <label>
+          Book
+          <select id="book"></select>
+        </label>
+
+        <label>
+          Chapter
+          <select id="chapter">
+            <option value="">Select chapter</option>
+          </select>
+        </label>
+
+        <button id="saveProfile">Save Progress</button>
+
       </div>
 
     </div>
 
-    <!-- RIGHT COLUMN -->
+    <!-- RIGHT -->
     <div class="home-right">
 
-      <div class="card-base home-card">
-        <h3>Leaderboard preview</h3>
-        <p>Top family progress here.</p>
-      </div>
+      <h3>Family Progress</h3>
 
-      <div class="card-base home-card">
-        <h3>Stats</h3>
-        <p>Total chapters, streak rank, etc.</p>
-      </div>
+      <div id="homeFamilyCards" class="overview-cards"></div>
 
     </div>
 
   </div>
 
 </section>
+
 
 
     <!-- FAMILY -->
