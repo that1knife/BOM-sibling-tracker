@@ -224,9 +224,45 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
 
   setView("home");
   loadUsers();
+  loadHomeProfile(user);
 });
 
+    /* ======================
+     Load home profile
+  ====================== */
 
+async function loadHomeProfile(user) {
+
+  const snap = await getDocs(collection(db, "users"));
+  const meRef = snap.docs.find(d => d.id === user.uid);
+
+  if (!meRef) return;
+
+  const me = meRef.data();
+
+  const progress = calculateProgress(me.book, me.chapter || 0);
+  const percent = Math.round(progress / TOTAL_CHAPTERS * 100);
+
+  document.getElementById("homeAvatar").src =
+    me.photoURL || "https://via.placeholder.com/96";
+
+  document.getElementById("homeName").textContent =
+    me.name || user.displayName;
+
+  document.getElementById("homeBook").textContent =
+    me.book
+      ? `${me.book} ${me.chapter}`
+      : "No reading logged yet";
+
+  document.getElementById("homeProgressBar").style.width =
+    percent + "%";
+
+  document.getElementById("homePercent").textContent =
+    `${percent}% complete`;
+}
+
+
+  
   /* ======================
      SAVE PROFILE
   ====================== */
@@ -255,9 +291,11 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
 
   async function loadUsers() {
     const container = $("userCards");
+    const homeStrip = document.getElementById("homeFamilyCards");
+
     if (!container) return;
 
-    container.innerHTML = "";
+
     const snap = await getDocs(collection(db, "users"));
     const users = snap.docs.map(d => d.data());
 
@@ -277,6 +315,10 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
         </div>
       `;
       container.appendChild(card);
+      if (homeStrip) {
+        homeStrip.appendChild(card.cloneNode(true));
+}
+
     });
   }
 
