@@ -758,6 +758,12 @@ main {
   border-left: 1px solid #e5e7eb;
 }
 
+@media (max-width: 900px) {
+  .home-right {
+    display: none;
+  }
+}
+
 
 /* profile block */
 
@@ -836,5 +842,16 @@ main {
 
 .home-right .overview-cards {
   padding-top: 8px;
+}
+
+
+#familyPanel {
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+#homeFamilyCards {
+  max-height: 320px;
+  overflow-y: auto;
 }
 
