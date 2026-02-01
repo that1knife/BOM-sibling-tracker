@@ -69,6 +69,8 @@ let readingDays = [];
 let currentStreak = 0;
 let currentMonth = new Date(new Date().setDate(1));
 
+let loadingUsers = false;
+
 /* -===- PWA Mobile check and setup -===- */
 
 const isStandalone =
@@ -227,7 +229,7 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
   appRoot.hidden = false;
 
   setView("home");
-  loadUsers();
+  ();
   loadHomeProfile(user);
 });
 
@@ -299,12 +301,18 @@ async function loadHomeProfile(user) {
   ====================== */
 
   async function loadUsers() {
+    if (loadingUsers) return;
+    loadingUsers = true;
+  
     const container = $("userCards");
     const homeStrip = document.getElementById("homeFamilyCards");
-
+  
     if (!container) return;
-
+  
     container.innerHTML = "";
+    if (homeStrip) homeStrip.innerHTML = "";
+  
+      
     const snap = await getDocs(collection(db, "users"));
     const users = snap.docs.map(d => d.data());
 
@@ -329,6 +337,7 @@ async function loadHomeProfile(user) {
 }
 
     });
+    loadingUsers = false;
   }
 
 });
