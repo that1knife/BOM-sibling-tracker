@@ -87,6 +87,7 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+
 /* ======================
    DOM READY
 ====================== */
@@ -223,6 +224,7 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
     });
   }
 
+  
   /* ======================
      AUTH STATE
   ====================== */
@@ -242,6 +244,7 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
   loadUsers();
 });
 
+  
     /* ======================
      Load home profile
   ====================== */
@@ -304,6 +307,7 @@ async function loadHomeProfile(user) {
       loadHomeProfile(user);
     };
 
+  
   /* ======================
      LOAD USERS
   ====================== */
