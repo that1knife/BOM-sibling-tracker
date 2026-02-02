@@ -341,4 +341,4 @@ async function loadHomeProfile(user) {
     });
     loadingUsers = false;
   }
-
+});
