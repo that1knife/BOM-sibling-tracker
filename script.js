@@ -129,6 +129,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function initBookDropdown() {
     if (!bookSelect || bookSelect.children.length) return;
+  
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Select book";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    bookSelect.appendChild(placeholder);
+  
     BOOKS_ORDERED.forEach(b => {
       const opt = document.createElement("option");
       opt.value = b.name;
@@ -136,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bookSelect.appendChild(opt);
     });
   }
+
   
   /* ======================
    VIEW SYSTEM
@@ -230,6 +239,7 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
 
   setView("home");
   loadHomeProfile(user);
+  loadUsers();
 });
 
     /* ======================
@@ -305,14 +315,17 @@ async function loadHomeProfile(user) {
   
     const container = $("userCards");
     const homeStrip = document.getElementById("homeFamilyCards");
-  
+
+    const prevHeight = container.offsetHeight;
+    container.style.minHeight = prevHeight + "px";
+    
     if (!container) {
       loadingUsers = false;
       return;
     }
   
-    container.innerHTML = "";
-    if (homeStrip) homeStrip.innerHTML = "";
+    const frag = document.createDocumentFragment();
+    const homeFrag = document.createDocumentFragment();
   
       
     const snap = await getDocs(collection(db, "users"));
@@ -333,12 +346,17 @@ async function loadHomeProfile(user) {
           <div class="progress-bar" style="width:${percent}%"></div>
         </div>
       `;
-      container.appendChild(card);
+      frag.appendChild(card);
+
       if (homeStrip) {
-        homeStrip.appendChild(card.cloneNode(true));
-}
+        homeFrag.appendChild(card.cloneNode(true));
+      }
+
 
     });
+    container.replaceChildren(frag);
+    if (homeStrip) homeStrip.replaceChildren(homeFrag);
     loadingUsers = false;
+    container.style.minHeight = "";
   }
 });
