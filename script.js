@@ -306,7 +306,10 @@ async function loadHomeProfile(user) {
     const container = $("userCards");
     const homeStrip = document.getElementById("homeFamilyCards");
   
-    if (!container) return;
+    if (!container) {
+      loadingUsers = false;
+      return;
+    }
   
     container.innerHTML = "";
     if (homeStrip) homeStrip.innerHTML = "";
@@ -339,4 +342,3 @@ async function loadHomeProfile(user) {
     loadingUsers = false;
   }
 
-});
