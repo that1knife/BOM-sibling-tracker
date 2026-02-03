@@ -331,7 +331,16 @@ async function loadHomeProfile(user) {
   
       
     const snap = await getDocs(collection(db, "users"));
-    const users = snap.docs.map(d => d.data());
+    let users = snap.docs.map(d => d.data());
+
+    if (rankingMode === "streak") {
+      users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
+    } else {
+      users.sort((a, b) =>
+        calculateProgress(b.book, b.chapter || 0) -
+        calculateProgress(a.book, a.chapter || 0)
+      );
+    }
 
     users.forEach(u => {
       const progress = calculateProgress(u.book, u.chapter || 0);
