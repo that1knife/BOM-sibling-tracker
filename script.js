@@ -368,22 +368,7 @@ async function loadHomeProfile(user) {
   
       familyFrag.appendChild(lb);
   
-      /* ---------- HOME STRIP CARD ---------- */
-  
-      const homeCard = document.createElement("div");
-      homeCard.className = "overview-card card-base";
-  
-      homeCard.innerHTML = `
-        <img src="${u.photoURL || "https://via.placeholder.com/64"}">
-        <div class="overview-name">${u.name || "Unknown"}</div>
-        <div class="overview-book">${u.book || "-"} ${u.chapter || 0}</div>
-        <div class="overview-streak">🔥 ${u.streak || 0}</div>
-        <div class="progress-bar-container">
-          <div class="progress-bar" style="width:${percent}%"></div>
-        </div>
-      `;
-  
-      homeFrag.appendChild(homeCard);
+      homeFrag.appendChild(lb.cloneNode(true));
     });
   
     familyContainer.replaceChildren(familyFrag);
