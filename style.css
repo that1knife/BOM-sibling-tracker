@@ -763,6 +763,17 @@ main {
   border-left: 1px solid #e5e7eb;
 }
 
+.home-right {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.home-right .overview-cards {
+  display: flex;
+  flex-direction: row;
+}
+
+
 @media (max-width: 900px) {
   .home-right {
     display: none;
