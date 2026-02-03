@@ -866,13 +866,15 @@ main {
 
 
 #familyPanel {
-  height: calc(100vh - 140px);
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 
 #userCards {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 14px;
   max-height: calc(100vh - 220px);
