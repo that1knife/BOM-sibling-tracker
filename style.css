@@ -863,6 +863,11 @@ main {
 }
 
 
+.desktop-layout > .panel {
+  height: 100%;
+}
+
+
 #familyPanel {
   display: flex;
   flex-direction: column;
