@@ -317,6 +317,7 @@ async function loadHomeProfile(user) {
     loadingUsers = true;
   
     const container = $("userCards");
+    const frag = document.createDocumentFragment();
 
     const prevHeight = container.offsetHeight;
     container.style.minHeight = prevHeight + "px";
@@ -362,6 +363,7 @@ async function loadHomeProfile(user) {
       if (homeStrip) {
         homeFrag.appendChild(card.cloneNode(true));
       }
+      frag.appendChild(card);
 
 
     });
@@ -369,5 +371,8 @@ async function loadHomeProfile(user) {
     if (homeStrip) homeStrip.replaceChildren(homeFrag);
     loadingUsers = false;
     container.style.minHeight = "";
+    container.innerHTML = "";
+    container.appendChild(frag);
+
   }
 });
