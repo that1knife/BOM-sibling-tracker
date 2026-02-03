@@ -740,20 +740,25 @@ main {
 
 .home-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 50% 50%;
   gap: 32px;
+  height: 100%;
+  overflow: hidden;
 }
 
 .home-left {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
 }
 
 .home-right {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow-y: auto;
+  padding-right: 8px;
   padding-left: 32px;
   border-left: 1px solid #e5e7eb;
 }
@@ -761,6 +766,10 @@ main {
 @media (max-width: 900px) {
   .home-right {
     display: none;
+  }
+
+  .home-grid {
+    grid-template-columns: 1fr;
   }
 }
 
