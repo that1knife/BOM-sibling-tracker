@@ -317,7 +317,6 @@ async function loadHomeProfile(user) {
     loadingUsers = true;
   
     const container = $("userCards");
-    const homeStrip = document.getElementById("homeFamilyCards");
 
     const prevHeight = container.offsetHeight;
     container.style.minHeight = prevHeight + "px";
