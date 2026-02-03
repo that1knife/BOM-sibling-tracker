@@ -339,14 +339,41 @@ async function loadHomeProfile(user) {
       );
     }
   
-    users.forEach(u => {
+    users.forEach((u, idx) => {
       const progress = calculateProgress(u.book, u.chapter || 0);
       const percent = Math.round(progress / TOTAL_CHAPTERS * 100);
   
-      const card = document.createElement("div");
-      card.className = "overview-card card-base";
+      /* ---------- FAMILY LEADERBOARD CARD ---------- */
   
-      card.innerHTML = `
+      const lb = document.createElement("div");
+      lb.className = "leaderboard-card card-base";
+  
+      lb.innerHTML = `
+        <div class="lb-rank">${idx + 1}</div>
+        <img src="${u.photoURL || "https://via.placeholder.com/64"}">
+        <div class="leaderboard-main">
+          <strong>${u.name || "Unknown"}</strong>
+          <small>${u.book || "-"} ${u.chapter || 0}</small>
+        </div>
+  
+        <div class="lb-streak">🔥 ${u.streak || 0}</div>
+  
+        <div class="lb-progress">
+          <span>${percent}%</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width:${percent}%"></div>
+          </div>
+        </div>
+      `;
+  
+      familyFrag.appendChild(lb);
+  
+      /* ---------- HOME STRIP CARD ---------- */
+  
+      const homeCard = document.createElement("div");
+      homeCard.className = "overview-card card-base";
+  
+      homeCard.innerHTML = `
         <img src="${u.photoURL || "https://via.placeholder.com/64"}">
         <div class="overview-name">${u.name || "Unknown"}</div>
         <div class="overview-book">${u.book || "-"} ${u.chapter || 0}</div>
@@ -356,11 +383,7 @@ async function loadHomeProfile(user) {
         </div>
       `;
   
-      familyFrag.appendChild(card);
-  
-      if (homeContainer) {
-        homeFrag.appendChild(card.cloneNode(true));
-      }
+      homeFrag.appendChild(homeCard);
     });
   
     familyContainer.replaceChildren(familyFrag);
