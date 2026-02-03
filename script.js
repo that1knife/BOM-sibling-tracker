@@ -311,29 +311,25 @@ async function loadHomeProfile(user) {
   /* ======================
      LOAD USERS
   ====================== */
-
+  
   async function loadUsers() {
     if (loadingUsers) return;
     loadingUsers = true;
   
-    const container = $("userCards");
-    const frag = document.createDocumentFragment();
-
-    const prevHeight = container.offsetHeight;
-    container.style.minHeight = prevHeight + "px";
-    
-    if (!container) {
+    const familyContainer = document.getElementById("userCards");
+    const homeContainer = document.getElementById("homeFamilyCards");
+  
+    if (!familyContainer) {
       loadingUsers = false;
       return;
     }
   
-    const frag = document.createDocumentFragment();
+    const familyFrag = document.createDocumentFragment();
     const homeFrag = document.createDocumentFragment();
   
-      
     const snap = await getDocs(collection(db, "users"));
     let users = snap.docs.map(d => d.data());
-
+  
     if (rankingMode === "streak") {
       users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
     } else {
@@ -342,37 +338,38 @@ async function loadHomeProfile(user) {
         calculateProgress(a.book, a.chapter || 0)
       );
     }
-
+  
     users.forEach(u => {
       const progress = calculateProgress(u.book, u.chapter || 0);
-      const percent = (progress / TOTAL_CHAPTERS) * 100;
-
+      const percent = Math.round(progress / TOTAL_CHAPTERS * 100);
+  
       const card = document.createElement("div");
       card.className = "overview-card card-base";
+  
       card.innerHTML = `
         <img src="${u.photoURL || "https://via.placeholder.com/64"}">
         <div class="overview-name">${u.name || "Unknown"}</div>
-        <div>${u.book || "-"} ${u.chapter || 0}</div>
-        <div>🔥 ${u.streak || 0}</div>
+        <div class="overview-book">${u.book || "-"} ${u.chapter || 0}</div>
+        <div class="overview-streak">🔥 ${u.streak || 0}</div>
         <div class="progress-bar-container">
           <div class="progress-bar" style="width:${percent}%"></div>
         </div>
       `;
-      frag.appendChild(card);
-
-      if (homeStrip) {
+  
+      familyFrag.appendChild(card);
+  
+      if (homeContainer) {
         homeFrag.appendChild(card.cloneNode(true));
       }
-      frag.appendChild(card);
-
-
     });
-    container.replaceChildren(frag);
-    if (homeStrip) homeStrip.replaceChildren(homeFrag);
+  
+    familyContainer.replaceChildren(familyFrag);
+  
+    if (homeContainer) {
+      homeContainer.replaceChildren(homeFrag);
+    }
+  
     loadingUsers = false;
-    container.style.minHeight = "";
-    container.innerHTML = "";
-    container.appendChild(frag);
-
   }
+
 });
