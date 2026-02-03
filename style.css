@@ -865,6 +865,7 @@ main {
   flex-direction: column;
   gap: 14px;
   max-height: calc(100vh - 220px);
+  min-height: 300px;
   overflow-y: auto;
 }
 
