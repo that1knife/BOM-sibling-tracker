@@ -371,32 +371,10 @@ main {
   box-shadow: var(--card-shadow-hover);
 }
 
-.overview-cards {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
-
-.overview-card {
-  min-width: 200px;
-}
-
 .card img {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-}
-
-.overview-card {
-  width: 220px;
-  padding: 20px;
-  text-align: center;
-}
-
-.overview-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 26px rgba(0,0,0,0.1);
 }
 
 .overview-card img {
