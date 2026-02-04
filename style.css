@@ -15,6 +15,13 @@ body.pwa {
   overscroll-behavior: none;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+
 * {
   box-sizing: border-box;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -749,6 +756,16 @@ main {
   flex-direction: row;
 }
 
+.home-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
 
 @media (max-width: 900px) {
   .home-right {
@@ -845,6 +862,12 @@ main {
   height: 100%;
 }
 
+.home-right,
+#userCards {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 
 #familyPanel {
   display: flex;
@@ -866,6 +889,13 @@ main {
 #homeFamilyCards,
 #userCards {
   min-height: 300px;
+}
+
+#app {
+  padding: env(safe-area-inset-top)
+           env(safe-area-inset-right)
+           env(safe-area-inset-bottom)
+           env(safe-area-inset-left);
 }
 
 
