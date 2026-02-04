@@ -251,21 +251,31 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
 
 async function loadHomeProfile(user) {
 
+  // defaults from auth
+  document.getElementById("homeAvatar").src =
+    user.photoURL || "https://via.placeholder.com/96";
+
+  document.getElementById("homeName").textContent =
+    user.displayName || "Unknown";
+
+  document.getElementById("homeBook").textContent =
+    "No reading logged yet";
+
+  document.getElementById("homeProgressBar").style.width = "0%";
+  document.getElementById("homePercent").textContent = "0% complete";
+
   const ref = doc(db, "users", user.uid);
   const snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    console.warn("No profile yet for user");
-    return;
-  }
+  if (!snap.exists()) return;
 
   const me = snap.data();
 
   const progress = calculateProgress(me.book, me.chapter || 0);
   const percent = Math.round(progress / TOTAL_CHAPTERS * 100);
 
-  document.getElementById("homeAvatar").src =
-    me.photoURL || "https://via.placeholder.com/96";
+  if (me.photoURL)
+    document.getElementById("homeAvatar").src = me.photoURL;
 
   document.getElementById("homeName").textContent =
     me.name || user.displayName;
@@ -292,20 +302,25 @@ async function loadHomeProfile(user) {
     saveProfileBtn.onclick = async () => {
       const user = auth.currentUser;
       if (!user || !bookSelect || !chapterSelect) return;
-
+  
       await setDoc(
         doc(db, "users", user.uid),
         {
+          name: user.displayName,
+          photoURL: user.photoURL,
+  
           book: bookSelect.value,
           chapter: Number(chapterSelect.value || 0),
+  
           updatedAt: new Date()
         },
         { merge: true }
       );
-
-      loadUsers();
-      loadHomeProfile(user);
+  
+      await loadUsers();
+      await loadHomeProfile(user);
     };
+
 
   
   /* ======================
