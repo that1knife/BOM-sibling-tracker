@@ -120,12 +120,16 @@ document.addEventListener("DOMContentLoaded", () => {
   ====================== */
 
   function calculateProgress(book, chapter = 0) {
+    if (!book) return 0;
+  
     let completed = 0;
+  
     for (const b of BOOKS_ORDERED) {
       if (b.name === book) return completed + chapter;
       completed += b.chapters;
     }
-    return completed;
+  
+    return 0;
   }
 
   function initBookDropdown() {
@@ -350,10 +354,11 @@ async function loadHomeProfile(user) {
     if (rankingMode === "streak") {
       users.sort((a, b) => (b.streak || 0) - (a.streak || 0));
     } else {
-      users.sort((a, b) =>
-        calculateProgress(b.book, b.chapter || 0) -
-        calculateProgress(a.book, a.chapter || 0)
-      );
+      users.sort((a, b) => {
+        const aProg = calculateProgress(a.book, a.chapter || 0);
+        const bProg = calculateProgress(b.book, b.chapter || 0);
+        return bProg - aProg;
+      });
     }
   
     users.forEach((u, idx) => {
