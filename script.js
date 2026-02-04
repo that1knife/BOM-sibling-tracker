@@ -240,8 +240,10 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
     appRoot.hidden = false;
   
     setView("home");
-    loadHomeProfile(user);
-    loadUsers();
+
+    await loadHomeProfile(user);
+    await loadUsers();
+
   });
 
   
