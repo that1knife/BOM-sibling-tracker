@@ -16,6 +16,7 @@ import {
 import { getDoc } from
   "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+
 /* ======================
    FIREBASE SETUP
 ====================== */
@@ -91,6 +92,7 @@ if ("serviceWorker" in navigator) {
 /* ======================
    DOM READY
 ====================== */
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
