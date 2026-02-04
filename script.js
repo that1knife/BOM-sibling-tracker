@@ -229,7 +229,7 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
      AUTH STATE
   ====================== */
 
-  onAuthStateChanged(auth, user => {
+  onAuthStateChanged(auth, async user => {
     if (!user) {
       landing.style.display = "flex";
       appRoot.hidden = true;
