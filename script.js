@@ -230,19 +230,19 @@ document.querySelectorAll(".bottom-nav button").forEach(btn => {
   ====================== */
 
   onAuthStateChanged(auth, user => {
-  if (!user) {
-    landing.style.display = "flex";
-    appRoot.hidden = true;
-    return;
-  }
-
-  landing.style.display = "none";
-  appRoot.hidden = false;
-
-  setView("home");
-  loadHomeProfile(user);
-  loadUsers();
-});
+    if (!user) {
+      landing.style.display = "flex";
+      appRoot.hidden = true;
+      return;
+    }
+  
+    landing.style.display = "none";
+    appRoot.hidden = false;
+  
+    setView("home");
+    loadHomeProfile(user);
+    loadUsers();
+  });
 
   
     /* ======================
