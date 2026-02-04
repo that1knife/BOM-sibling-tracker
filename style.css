@@ -863,3 +863,9 @@ main {
   overflow-y: auto;
 }
 
+#homeFamilyCards,
+#userCards {
+  min-height: 300px;
+}
+
+
