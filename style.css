@@ -849,7 +849,7 @@ main {
 }
 
 
-#familyPanel {
+#familyPanel.active {
   display: flex;
   flex-direction: column;
   height: 100%;
