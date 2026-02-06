@@ -54,7 +54,7 @@ html, body {
   main {
     padding-bottom: 64px; /* space for nav */
   }
-}
+
 
 
 /* HEADER */
@@ -210,6 +210,7 @@ header button:hover {
   .bottom-nav {
     display: none;
   }
+}
 
 .desktop-layout {
   height: calc(100vh - 64px);
