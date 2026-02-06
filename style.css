@@ -228,11 +228,11 @@ header button:hover {
 
 .panel {
   display: none;
-  height: 100%;
 }
 
 .panel.active {
   display: block;
+  height: 100%;
 }
 
 
