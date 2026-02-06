@@ -50,10 +50,6 @@ html, body {
 }
 
 
-  .profile-panel,
-  .dashboard-panel {
-    display: none;
-  }
 
   main {
     padding-bottom: 64px; /* space for nav */
@@ -229,15 +225,15 @@ header button:hover {
 }
 
 
-  .panel {
-    display: none;
-    height: 100%;
-  }
-
-  .panel.active {
-    display: block;
-  }
+.panel {
+  display: none;
+  height: 100%;
 }
+
+.panel.active {
+  display: block;
+}
+
 
 /* ---------- MOBILE ---------- */
 
