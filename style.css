@@ -228,11 +228,11 @@ header button:hover {
 
 .panel {
   display: none;
+  height: 100%;
 }
 
 .panel.active {
   display: block;
-  height: 100%;
 }
 
 
@@ -337,6 +337,7 @@ main {
   padding: 1.25rem;
   height: 100%;
   overflow-y: auto;
+  display: none;
 }
 
 .cards-container {
