@@ -214,9 +214,10 @@ header button:hover {
 
 .desktop-layout {
   height: calc(100vh - 64px);
-  max-width: 1400px;
-  margin: auto;
-  padding: 20px;
+  width: 100%;
+  max-width: 1800px;   /* wider so gutters feel intentional */
+  margin-inline: auto;
+  padding: 24px 32px;
 }
 
 @media (max-width: 899px) {
@@ -703,10 +704,10 @@ main {
 
 .home-grid {
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 1fr 1fr;
   gap: 32px;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .home-left {
@@ -719,16 +720,13 @@ main {
 .home-right {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  overflow-y: auto;
-  padding-right: 0px;
-  padding-left: 16px;
-  border-left: 1px solid #e5e7eb;
-}
+  gap: 18px;
 
-.home-right {
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 0 20px 0 24px;
+  border-left: 1px solid #e5e7eb;
 }
 
 .home-right .overview-cards {
@@ -842,6 +840,18 @@ main {
   height: 100%;
 }
 
+
+@media (max-width: 900px) {
+  .desktop-layout {
+    padding:
+      env(safe-area-inset-top)
+      16px
+      calc(16px + env(safe-area-inset-bottom))
+      16px;
+  }
+}
+
+
 .home-right,
 #userCards {
   overflow-y: auto;
@@ -872,10 +882,7 @@ main {
 }
 
 #app {
-  padding: env(safe-area-inset-top)
-           env(safe-area-inset-right)
-           env(safe-area-inset-bottom)
-           env(safe-area-inset-left);
+  padding: 0;
 }
 
 
