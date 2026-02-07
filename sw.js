@@ -1,4 +1,4 @@
-const CACHE_NAME = "bom-cache-v1.1.10";
+const CACHE_NAME = "bom-cache-v1.1.11";
 
 const BASE = "/BOM-sibling-tracker";
 
