@@ -68,7 +68,6 @@ const BOOKS_ORDERED = [
 let viewMode = "overview";
 let rankingMode = "progress";
 let readingDays = [];
-let currentStreak = 0;
 let currentMonth = new Date(new Date().setDate(1));
 
 let loadingUsers = false;
@@ -114,6 +113,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const overviewBtn = $("overviewBtn");
   const rankingsBtn = $("rankingsBtn");
   const rankingTypeSelect = $("rankingType");
+
+  let readingLog = {};
+  let currentStreak = 0;
+  let longestStreak = 0;
+  
+  const calendarGrid = $("calendarGrid");
+  const calendarMonthLabel = $("calendarMonth");
+  const prevMonthBtn = $("prevMonth");
+  const nextMonthBtn = $("nextMonth");
+  const streakDisplay = $("streakDisplay");
 
   initBookDropdown();
 
@@ -280,6 +289,15 @@ async function loadHomeProfile(user) {
 
   const me = snap.data();
 
+  readingLog = me.readingLog || {};
+  currentStreak = calculateStreak(readingLog);
+  longestStreak = me.longestStreak || currentStreak;
+  
+  streakDisplay.textContent =
+    `🔥 Current streak: ${currentStreak} days`;
+  
+  renderCalendar();
+  
   const progress = calculateProgress(me.book, me.chapter || 0);
   const percent = Math.round(progress / TOTAL_CHAPTERS * 100);
 
@@ -311,16 +329,27 @@ async function loadHomeProfile(user) {
     saveProfileBtn.onclick = async () => {
       const user = auth.currentUser;
       if (!user || !bookSelect || !chapterSelect) return;
-  
+      
+      const todayISO = new Date().toISOString().split("T")[0];
+
+      readingLog[todayISO] = true;
+      
+      const newStreak = calculateStreak(readingLog);
+      longestStreak = Math.max(longestStreak, newStreak);
+      
       await setDoc(
         doc(db, "users", user.uid),
         {
           name: user.displayName,
           photoURL: user.photoURL,
-  
+        
           book: bookSelect.value,
           chapter: Number(chapterSelect.value || 0),
-  
+        
+          readingLog,
+          streak: newStreak,
+          longestStreak,
+        
           updatedAt: new Date()
         },
         { merge: true }
@@ -404,5 +433,81 @@ async function loadHomeProfile(user) {
   
     loadingUsers = false;
   }
+
+
+  /* ======================
+     CALENDAR & STREAK
+  ====================== */
+
+  function renderCalendar() {
+    if (!calendarGrid) return;
+  
+    calendarGrid.innerHTML = "";
+  
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+  
+    calendarMonthLabel.textContent =
+      currentMonth.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric"
+      });
+  
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+  
+    for (let i = 0; i < firstDay; i++) {
+      const blank = document.createElement("div");
+      calendarGrid.appendChild(blank);
+    }
+  
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(year, month, d);
+      const iso = date.toISOString().split("T")[0];
+  
+      const cell = document.createElement("div");
+      cell.className = "calendar-day";
+      cell.textContent = d;
+  
+      if (readingLog[iso]) {
+        cell.classList.add("marked");
+      }
+  
+      calendarGrid.appendChild(cell);
+    }
+  }
+
+  /* -=- BUTTONS -=- */
+  
+  prevMonthBtn.onclick = () => {
+    currentMonth.setMonth(currentMonth.getMonth() - 1);
+    renderCalendar();
+  };
+  
+  nextMonthBtn.onclick = () => {
+    currentMonth.setMonth(currentMonth.getMonth() + 1);
+    renderCalendar();
+  };
+
+
+
+  /* -=- STREAK -=- */
+  
+  function calculateStreak(log) {
+    let streak = 0;
+    const today = new Date();
+  
+    for (let i = 0; ; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const iso = d.toISOString().split("T")[0];
+  
+      if (log[iso]) streak++;
+      else break;
+    }
+  
+    return streak;
+  }
+
 
 });
